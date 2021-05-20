@@ -18,30 +18,9 @@ modifications.
     - Debezium Connector for CDC (Change Data Capture)
 - Websockets
 
-## Database structure
-
-#### Projects
-
-Collection name: `rtdb-projects`
-
-| Field         | Type            |
-| :--------     | :-------        |
-| `_id`         | `ObjectId`      |
-| `name`        | `String`        |
-| `apikey`      | `String`        |
-| `active`      | `Boolean`       |
-| `collections` | `List<String>`  |
-| `createdAt`   | `Long`          |
-
-A project has a global apikey.
-
-The project name and collections names should respect
-the [MongoDB restrictions names](https://docs.mongodb.com/manual/reference/limits/#std-label-restrictions-on-db-names).
-
 ## Features
 
-- Create a project
-- Create tables associated to a project
+- Create a project and its collections
 
 ## API Reference
 
@@ -63,7 +42,27 @@ the [MongoDB restrictions names](https://docs.mongodb.com/manual/reference/limit
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `name`      | `string` | **Required**. The table name |
+| `name`      | `string` | **Required**. The collection name |
+
+## Database structure
+
+#### Projects
+
+Collection name: `rtdb-projects`
+
+| Field         | Type            |
+| :--------     | :-------        |
+| `_id`         | `ObjectId`      |
+| `name`        | `String`        |
+| `apikey`      | `String`        |
+| `active`      | `Boolean`       |
+| `collections` | `List<String>`  |
+| `createdAt`   | `Long`          |
+
+A project has a global apikey.
+
+The project name and collections names should respect
+the [MongoDB restrictions names](https://docs.mongodb.com/manual/reference/limits/#std-label-restrictions-on-db-names).
 
 ## Packaging and running the application
 

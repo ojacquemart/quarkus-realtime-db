@@ -1,7 +1,7 @@
 package com.github.ojacquemart.realtime.admin
 
 import com.github.ojacquemart.realtime.admin.project.NewProjectRequest
-import com.github.ojacquemart.realtime.admin.project.NewTableRequest
+import com.github.ojacquemart.realtime.admin.project.NewCollectionRequest
 import com.github.ojacquemart.realtime.admin.project.ProjectService
 import javax.validation.Valid
 import javax.ws.rs.Consumes
@@ -23,7 +23,7 @@ class AdminResource(
   @Path("projects/{projectName}/collections")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
-  fun createTable(projectName: String, @Valid payload: NewTableRequest) =
-    projectService.createTable(projectName, payload)
+  fun createCollection(projectName: String, @Valid payload: NewCollectionRequest) =
+    projectService.createCollection(projectName, payload)
 
 }

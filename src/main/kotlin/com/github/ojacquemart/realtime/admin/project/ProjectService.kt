@@ -39,18 +39,18 @@ class ProjectService(
     }
   }
 
-  fun createTable(projectName: String, payload: NewTableRequest) {
-    val tableName = payload.name.trim()
-    logger.debug("Attach table $tableName to project $projectName")
+  fun createCollection(projectName: String, payload: NewCollectionRequest) {
+    val collectionName = payload.name.trim()
+    logger.debug("Attach collection $collectionName to project $projectName")
 
     val project = projectRepository.findByName(projectName)
       ?: throw BadRequestException("Project '$projectName' not found")
 
-    if (project.hasCollection(tableName)) {
-      throw BadRequestException("Project '$projectName' already contains table '$tableName'")
+    if (project.hasCollection(collectionName)) {
+      throw BadRequestException("Project '$projectName' already contains collection '$collectionName'")
     }
 
-    project.collections.add(tableName)
+    project.addCollection(collectionName)
     projectRepository.update(project)
   }
 

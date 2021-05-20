@@ -17,6 +17,10 @@ data class ProjectEntity(
   @JsonIgnore
   fun hasApikey(apikey: String?) = this.apikey == apikey
 
+  fun addCollection(collectionName: String) {
+    collections.add(collectionName)
+  }
+
   @JsonIgnore
   fun hasCollection(name: String) = collections.contains(name)
 
