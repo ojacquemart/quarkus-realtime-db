@@ -1,18 +1,69 @@
-# realtime-db project
+# Real Time Database aka RTDB
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+Real Time Database is a project to expose live database changes.
 
-## Running the application in dev mode
+This project exposes apis to configure a project and its collections. It relies on MongoDB.
 
-You can run your application in dev mode that enables live coding using:
+The data modifications will be visible in live a la firebase. Clients should subscribe to a websocket to get the
+modifications.
 
-```shell script
-./mvnw compile quarkus:dev
+## Stack
+
+- Quarkus
+- MongoDB
+- Kafka
+    - Kafka Connect
+    - Debezium Connector for CDC (Change Data Capture)
+- Websockets
+
+## Database structure
+
+#### Projects
+
+Collection name: `rtdb-projects`
+
+| Field         | Type            |
+| :--------     | :-------        |
+| `_id`         | `ObjectId`      |
+| `name`        | `String`        |
+| `apikey`      | `String`        |
+| `active`      | `Boolean`       |
+| `collections` | `List<String>`  |
+| `createdAt`   | `Long`          |
+
+A project has a global apikey.
+
+The project name and collections names should respect
+the [MongoDB restrictions names](https://docs.mongodb.com/manual/reference/limits/#std-label-restrictions-on-db-names).
+
+## Features
+
+- Create a project
+- Create tables associated to a project
+
+## API Reference
+
+#### Create a project
+
+```http
+  POST /admin/api/projects
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `name` | `string` | **Required**. The project name |
+
+#### Create a table
+
+```http
+  POST /admin/api/projects/{projectId}/collections
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | **Required**. The table name |
 
 ## Packaging and running the application
 
@@ -47,19 +98,7 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/realtime-db-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./target/db-realtime-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html
 .
-
-## Related guides
-
-- Kotlin ([guide](https://quarkus.io/guides/kotlin)): Write your services in Kotlin
-
-## Provided examples
-
-### RESTEasy Reactive example
-
-Rest is easy peasy & reactive with this Hello World RESTEasy Reactive resource.
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

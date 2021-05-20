@@ -1,0 +1,57 @@
+package com.github.ojacquemart.realtime.admin.project
+
+import org.bson.types.ObjectId
+import org.jboss.logging.Logger
+import java.sql.Timestamp
+import java.time.Instant
+import java.util.*
+import javax.enterprise.context.ApplicationScoped
+import javax.ws.rs.BadRequestException
+
+@ApplicationScoped
+class ProjectService(
+  val projectRepository: ProjectRepository
+) {
+
+  private val logger = Logger.getLogger(ProjectService::class.java)
+
+  fun create(payload: NewProjectRequest) {
+    logger.debug("Try to persist project '${payload.name}'")
+
+    throwExceptionIfNameExists(payload)
+    doPersist(payload)
+  }
+
+  private fun doPersist(payload: NewProjectRequest) {
+    val now = Timestamp.from(Instant.now())
+    val project = ProjectEntity(
+      id = ObjectId(),
+      name = payload.name,
+      apikey = UUID.randomUUID().toString(),
+      createdAt = now.time
+    )
+    projectRepository.persist(project)
+  }
+
+  private fun throwExceptionIfNameExists(payload: NewProjectRequest) {
+    if (projectRepository.existsByName(payload.name)) {
+      throw BadRequestException("Project with name '${payload.name} already exists'")
+    }
+  }
+
+  fun createTable(projectName: String, payload: NewTableRequest) {
+    val tableName = payload.name.trim()
+    logger.debug("Attach table $tableName to project $projectName")
+
+    val project = projectRepository.findByName(projectName)
+      ?: throw BadRequestException("Project '$projectName' not found")
+
+    if (project.hasCollection(tableName)) {
+      throw BadRequestException("Project '$projectName' already contains table '$tableName'")
+    }
+
+    project.collections.add(tableName)
+    projectRepository.update(project)
+  }
+
+}
