@@ -1,0 +1,10 @@
+{
+  "name": "rtdb-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mongodb.MongoDbConnector",
+    "mongodb.hosts": "rs0/mongo:27017",
+    "mongodb.name": "rtdb",
+    "database.exclude.list": "admin,config,local",
+    "collection.whitelist": ".*"
+  }
+}

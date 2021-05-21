@@ -2,7 +2,7 @@
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
-Real Time Database is a project to expose live database changes.
+Real Time Database is a project to notice live database changes.
 
 This project exposes apis to configure a project and its collections. It relies on MongoDB.
 
@@ -14,13 +14,58 @@ modifications.
 - Quarkus
 - MongoDB
 - Kafka
-    - Kafka Connect
-    - Debezium Connector for CDC (Change Data Capture)
+  - Kafka Connect
+  - Debezium Connector for CDC (Change Data Capture)
 - Websockets
 
 ## Features
 
 - Create a project and its collections
+- Listen MongoDB events through Kafka Connect and CDC (Change Data Capture) with Debezium
+
+## Dev
+
+You can setup a running environment with Zookeeper, Kafka, Debezium and Mongo using docker-compose.
+
+```shell script
+docker-compose up
+```
+
+You can run your application in dev mode that enables live coding using:
+```shell script
+./mvnw compile quarkus:dev
+```
+
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+
+### Mongo
+
+The MongoDB instance is initialized in a replica set mode. Normally, the docker-compose command does it for you.
+
+### Debezium
+
+Debezium requires a [MongoDB connector](dbz-mongodb-connector.json).
+
+Here are the curl commands to add the MongoDB connector:
+
+```shell script
+curl -X DELETE localhost:8083/connectors/rtdb-connector
+curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @dbz-mongodb-connector.json
+curl -X GET -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors
+```
+
+By default, the reserved databases (admin, config and local) are not monitored.
+
+## Kafka
+
+### Consumers config
+
+See [Consumers configuration](https://kafka.apache.org/documentation/#consumerconfigs)
+
+The `metadata.max.age` property is set to 30 seconds. It means that the quarkus app will receive new items
+from any new collections after 30 seconds. The default value was 5 minutes.
+
+TODO: see if there is a way to auto-detect the new topics created.
 
 ## API Reference
 
