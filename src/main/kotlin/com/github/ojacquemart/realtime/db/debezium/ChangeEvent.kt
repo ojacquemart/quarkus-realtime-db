@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class DebeziumChangeEvent(
+data class ChangeEvent(
   val payload: Payload? = null
 ) {
 
   data class Payload(
     @JsonProperty("op")
     val op: String,
+    val filter: String? = null,
+    val patch: String? = null,
     val after: String? = null,
     val source: Source? = null
   )

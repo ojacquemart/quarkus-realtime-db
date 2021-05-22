@@ -6,14 +6,14 @@ import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
-class DebeziumChangeEventConsumer(
+class ChangeEventConsumer(
   val eventBus: EventBus
 ) {
 
-  private val logger = Logger.getLogger(DebeziumChangeEventConsumer::class.java)
+  private val logger = Logger.getLogger(ChangeEventConsumer::class.java)
 
   @Incoming("rtdb")
-  fun onMessage(message: DebeziumChangeEvent?) {
+  fun onMessage(message: ChangeEvent?) {
     try {
       logger.info("Message received: $message")
 

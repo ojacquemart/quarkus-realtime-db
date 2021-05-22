@@ -11,20 +11,18 @@ class DebeziumData(
 ) {
 
   companion object {
-    private val OBJECT_ID_PARSER = MongoObjectIdMapParser()
+    private val JSON_DOCUMENT_CONVERTER = ChangeEventPayloadToJsonDocumentConverter()
 
-    fun from(changeEvent: DebeziumChangeEvent?): DebeziumData? {
+    fun from(changeEvent: ChangeEvent?): DebeziumData? {
       val payload = changeEvent?.payload ?: return null
-      val after = payload.after ?: return null
-
-      val data = OBJECT_ID_PARSER.parse(after)
+      val data = JSON_DOCUMENT_CONVERTER.convert(changeEvent) ?: return null
 
       return DebeziumData(
-        data = data,
-        collection = payload.source?.collection,
         db = payload.source?.db,
+        collection = payload.source?.collection,
+        type = payload.op,
+        data = data,
         id = data["_id"] as String?,
-        type = payload.op
       )
     }
 
