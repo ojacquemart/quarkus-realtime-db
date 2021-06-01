@@ -6,6 +6,7 @@ import com.github.ojacquemart.realtime.db.MongoTestLifeCycleManager
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
+import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -44,7 +45,8 @@ internal class AdminResourceTest {
       .`when`()
       .post("/admin/api/projects")
       .then()
-      .statusCode(204)
+      .statusCode(200)
+      .body("apikey", notNullValue())
 
     val project = projectRepository.findByName("foobarqix")
     Assertions.assertNotNull(project)

@@ -15,14 +15,15 @@ class ProjectService(
 
   private val logger = Logger.getLogger(ProjectService::class.java)
 
-  fun create(payload: NewProjectRequest) {
+  fun create(payload: NewProjectRequest): ApikeyResponse {
     logger.debug("Try to persist project '${payload.name}'")
 
     throwExceptionIfNameExists(payload)
-    doPersist(payload)
+
+    return doPersist(payload)
   }
 
-  private fun doPersist(payload: NewProjectRequest) {
+  private fun doPersist(payload: NewProjectRequest): ApikeyResponse {
     val now = Timestamp.from(Instant.now())
     val project = ProjectEntity(
       id = ObjectId(),
@@ -31,6 +32,8 @@ class ProjectService(
       createdAt = now.time
     )
     projectRepository.persist(project)
+
+    return ApikeyResponse(apikey = project.apikey)
   }
 
   private fun throwExceptionIfNameExists(payload: NewProjectRequest) {

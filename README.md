@@ -109,6 +109,53 @@ A project has a global apikey.
 The project name and collections names should respect
 the [MongoDB restrictions names](https://docs.mongodb.com/manual/reference/limits/#std-label-restrictions-on-db-names).
 
+## Examples
+
+Setup the [debezium connector](#debezium).
+
+### JavaScript
+
+1️⃣ First, you have to create a project. The endpoint returns an apikey. Copy it while it's warm.
+
+```curl
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/admin/api/projects -d '{"name": "foobarqix"}'
+```
+
+2️⃣ The second endpoint associates a collection to the project.
+
+```curl
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/admin/api/projects/foobarqix/collections  -d '{"name": "demo"}'
+```
+
+3️⃣ Then, you can initialize the websocket connection. The `_all` parameter means that you will receive all events
+from the demo collection. Specify a id if you want to be more specific.
+
+```javascript
+var APIKEY = '1169c5fc-47ca-4da8-8569-04b6c5b52501'
+var socket = new WebSocket('ws://localhost:8080/foobarqix/demo/_all')
+socket.addEventListener('open', (event) => {
+    console.log('Connect initialized, verifying the apikey...')
+    socket.send(JSON.stringify({type: 'HELLO', content: APIKEY}))
+})
+
+socket.addEventListener('message', (event) => {
+    console.log('Message from rtdb:', event.data)
+})
+
+socket.addEventListener('close', (error, reason) => {
+    console.log('Connection closed:', error, reason)
+})
+```
+
+4️⃣ Play with the CRUD operations:
+
+```javascript
+socket.send(JSON.stringify({type: 'CREATE', content: {_id: "foo", "name": "bar"}}))
+socket.send(JSON.stringify({type: 'READ', content: {_id: "foo"}}))
+socket.send(JSON.stringify({type: 'UPDATE', content: {_id: "foo", "name": "foobarqix"}}))
+socket.send(JSON.stringify({type: 'DELETE', content: {_id: "foo"}}))
+```
+
 ## Packaging and running the application
 
 The application can be packaged using:
