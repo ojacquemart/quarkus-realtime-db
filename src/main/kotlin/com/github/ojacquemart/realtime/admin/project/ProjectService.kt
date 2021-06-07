@@ -42,6 +42,14 @@ class ProjectService(
     }
   }
 
+  fun getList(): List<String> {
+    logger.trace("Get projects names")
+
+    return projectRepository.listAll()
+      .mapNotNull { it.name }
+      .sorted()
+  }
+
   fun createCollection(projectName: String, payload: NewCollectionRequest) {
     val collectionName = payload.name.trim()
     logger.debug("Attach collection $collectionName to project $projectName")

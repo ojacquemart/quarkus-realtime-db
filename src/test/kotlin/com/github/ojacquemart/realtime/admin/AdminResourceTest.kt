@@ -6,6 +6,7 @@ import com.github.ojacquemart.realtime.db.MongoTestLifeCycleManager
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -79,6 +80,24 @@ internal class AdminResourceTest {
       .post("/admin/api/projects")
       .then()
       .statusCode(400)
+  }
+
+  @Test
+  fun `should get the projects names`() {
+    projectRepository.persist(
+      ProjectEntity(
+        name = "abc",
+        createdAt = 456L
+      )
+    )
+
+    given()
+      .contentType("application/json")
+      .`when`()
+      .get("/admin/api/projects")
+      .then()
+      .statusCode(200)
+      .body(`is`("""["abc","big-foobarqix"]"""))
   }
 
   @Test

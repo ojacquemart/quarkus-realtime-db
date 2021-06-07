@@ -79,6 +79,12 @@ TODO: see if there is a way to auto-detect the new topics created.
 | :-------- | :------- | :------------------------- |
 | `name` | `string` | **Required**. The project name |
 
+#### Get the projects names
+
+```http
+  GET /admin/api/projects
+```
+
 #### Create a table
 
 ```http
