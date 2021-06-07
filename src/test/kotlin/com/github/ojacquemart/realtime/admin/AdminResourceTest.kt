@@ -139,4 +139,26 @@ internal class AdminResourceTest {
       .statusCode(400)
   }
 
+  @Test
+  fun `should get a project by its name`() {
+    given()
+      .contentType("application/json")
+      .`when`()
+      .get("/admin/api/projects/big-foobarqix")
+      .then()
+      .statusCode(200)
+      .body("name", `is`("big-foobarqix"))
+      .body("collections", `is`(listOf("baz")))
+  }
+
+  @Test
+  fun `should not get a project by its name`() {
+    given()
+      .contentType("application/json")
+      .`when`()
+      .get("/admin/api/projects/not-found")
+      .then()
+      .statusCode(404)
+  }
+
 }

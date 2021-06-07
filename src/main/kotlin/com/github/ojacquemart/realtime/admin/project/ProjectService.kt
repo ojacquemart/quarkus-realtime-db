@@ -7,6 +7,7 @@ import java.time.Instant
 import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.BadRequestException
+import javax.ws.rs.NotFoundException
 
 @ApplicationScoped
 class ProjectService(
@@ -42,7 +43,13 @@ class ProjectService(
     }
   }
 
-  fun getList(): List<String> {
+  fun getProject(projectName: String): ProjectEntity {
+    logger.trace("Get project '$projectName'")
+
+    return projectRepository.findByName(projectName) ?: throw NotFoundException()
+  }
+
+  fun getProjects(): List<String> {
     logger.trace("Get projects names")
 
     return projectRepository.listAll()

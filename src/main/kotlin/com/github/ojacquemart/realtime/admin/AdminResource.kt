@@ -25,7 +25,13 @@ class AdminResource(
   @GET
   @Consumes(MediaType.APPLICATION_JSON)
   fun getProjects() =
-    projectService.getList()
+    projectService.getProjects()
+
+  @Path("projects/{projectName}")
+  @GET
+  @Consumes(MediaType.APPLICATION_JSON)
+  fun getProject(projectName: String) =
+    projectService.getProject(projectName)
 
   @Path("projects/{projectName}/collections")
   @POST
