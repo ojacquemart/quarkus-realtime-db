@@ -1,7 +1,7 @@
 <template>
-  <header>
-    <h1>
-      {{ t('title') }}
+  <header class="mb-6 ml-0 md:ml-5">
+    <h1 class="text-xl text-left cursor-pointer" @click="$router.push('/')">
+      🔥 {{ t('title') }}
     </h1>
   </header>
 </template>

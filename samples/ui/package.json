@@ -3,7 +3,7 @@
   "name": "rtdb-ui",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
     "serve": "vite preview"
   },
@@ -13,6 +13,7 @@
     "vue-router": "^4.0.8"
   },
   "devDependencies": {
+    "@headlessui/vue": "^1.2.0",
     "@intlify/vite-plugin-vue-i18n": "^2.1.2",
     "@tailwindcss/aspect-ratio": "~0.2",
     "@tailwindcss/forms": "~0.3",

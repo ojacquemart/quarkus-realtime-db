@@ -5,6 +5,7 @@ import App from './App.vue'
 import { router } from './router'
 
 import { en } from './locales/en'
+import './index.css'
 
 const i18n = createI18n({
   locale: 'en',
@@ -18,4 +19,3 @@ createApp(App)
   .use(i18n)
   .mount('#app')
 
-import './index.css'
