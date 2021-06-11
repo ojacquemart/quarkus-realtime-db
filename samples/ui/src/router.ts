@@ -14,4 +14,6 @@ const options: RouterOptions = {
   history: createWebHistory(),
   routes,
 }
-export const router = createRouter(options)
+const router = createRouter(options)
+
+export default router

@@ -1,5 +1,5 @@
 <template>
-  <header class="mb-6 ml-0 md:ml-5">
+  <header class="mb-6 ml-0 md:ml-5 p-2">
     <h1 class="text-xl text-left cursor-pointer" @click="$router.push('/')">
       🔥 {{ t('title') }}
     </h1>
@@ -18,9 +18,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style>
-header {
-  padding: .5em;
-}
-</style>

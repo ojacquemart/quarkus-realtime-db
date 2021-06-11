@@ -2,7 +2,9 @@
   <div class="grid grid-rows-layout-3 min-h-full">
     <rtdb-header></rtdb-header>
     <div class="px-2 sm:px-2 md:px-0 lg:px-0 xl:px-0 2xl:px0">
-      <router-view></router-view>
+      <Suspense>
+        <router-view></router-view>
+      </Suspense>
     </div>
     <rtdb-footer></rtdb-footer>
   </div>
@@ -11,8 +13,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
+import Header from '@/components/Header.vue'
+import Footer from '@/components/Footer.vue'
 
 export default defineComponent({
   name: 'App',

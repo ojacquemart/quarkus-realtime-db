@@ -1,4 +1,4 @@
-export const en = {
+const en = {
   title: 'QUARKUS RTDB SAMPLE',
   common: {
     ok: 'OK',
@@ -13,9 +13,12 @@ export const en = {
     title: 'Projects',
     new_project: 'New project',
     project_name: 'Project name',
+    api_projects_error: 'The api seems down 🙊🙊🙊',
   },
   collections: {
     project: 'Project',
     new_collection: 'Collection',
   },
 }
+
+export default en

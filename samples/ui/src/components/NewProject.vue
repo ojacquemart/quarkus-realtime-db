@@ -35,8 +35,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
-import Modal from './Modal.vue'
+import Modal from '@/components/Modal.vue'
 
 export default defineComponent({
   components: {
@@ -45,20 +46,21 @@ export default defineComponent({
   setup: () => {
     const isModalOpened = ref(false)
     const name = ref(null)
+    const store = useStore()
 
     return {
+      ...useI18n(),
       isModalOpened,
       name,
-      ...useI18n(),
-    }
-  },
-  methods: {
-    save() {
-      console.log(`newProject @ save "${this.name}"`)
+      save: async () => {
+        console.log(`newProject @ save "${name.value}"`)
 
-      this.isModalOpened = false
-      this.name = null
-    },
+        await store.dispatch('projects/createProject', {name: '' + name.value})
+
+        isModalOpened.value = false
+        name.value = null
+      },
+    }
   },
 })
 </script>
