@@ -15,6 +15,10 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     return {}
   },
   mutations: {
+    clear(state: StoreCollections) {
+      state.collection = undefined
+      state.project = undefined
+    },
     setProject(state: StoreCollections, project: ProjectModel) {
       state.project = project
     },

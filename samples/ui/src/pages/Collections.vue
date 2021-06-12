@@ -29,7 +29,7 @@
 </template>
 
 <script lang="typescript">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -49,6 +49,10 @@ export default defineComponent({
     const store = useStore()
     const route = useRoute()
     store.dispatch('collections/fetchProject', route.params.name)
+
+    onUnmounted(() => {
+      store.commit('collections/clear')
+    })
 
     return {
       ...useI18n(),
