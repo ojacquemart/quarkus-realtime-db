@@ -6,17 +6,7 @@
 
     <rtdb-new-collection></rtdb-new-collection>
     <rtdb-collections-select></rtdb-collections-select>
-
-    <div class="mt-4">
-      <div class="inline-block sm:mb-2 md:mb-2 border border-white p-2 rounded-lg select-all">
-        wss://localhost:8080/foobarqix/demo/_all
-      </div>
-      <div class="mt-2 md:inline md:ml-2">
-        <button class="rounded bg-secondary py-2 px-4 mr-0.5 text-white">📋</button>
-        <button class="rounded bg-secondary py-2 px-4 mr-0.5 text-white">➕</button>
-        <button class="rounded bg-secondary py-2 px-4 text-white">🗑️</button>
-      </div>
-    </div>
+    <rtdb-collection-socket-toolbar></rtdb-collection-socket-toolbar>
 
     <div class="mt-2 py-2 rounded-lg bg-secondary-light text-black">
       <div v-for="index in 10" class="cursor-pointer py-1 px-2">
@@ -45,12 +35,14 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 import CollectionsSelect from '@/components/CollectionsSelect.vue'
+import CollectionSocketToolbar from '@/components/SocketToolbar.vue'
 import NewCollection from '@/components/NewCollection.vue'
 
 export default defineComponent({
   components: {
     'rtdb-collections-select': CollectionsSelect,
     'rtdb-new-collection': NewCollection,
+    'rtdb-collection-socket-toolbar': CollectionSocketToolbar,
   },
   setup: () => {
     const activeId = ref(-1)

@@ -1,5 +1,5 @@
 <template>
-  <button class="rounded bg-secondary hover:bg-blue-700 py-2 px-4 text-white"
+  <button class="relative flex flex-col items-center rounded bg-secondary hover:bg-blue-700 py-2 px-4 text-white group"
           @click="isOpened = true">
     ➕ {{ t('collections.collection') }}
   </button>

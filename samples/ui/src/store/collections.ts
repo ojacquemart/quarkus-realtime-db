@@ -44,8 +44,18 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     },
   },
   getters: {
-    hasCollections(state: StoreCollections): boolean {
-      return (state.project?.collections ?? []).length > 0
+    hasCollection(state: StoreCollections): boolean {
+      return !!state.collection
+    },
+    getProjectCollectionUrlPart(state: StoreCollections): string | undefined {
+      if (!state.collection) {
+        return undefined
+      }
+
+      return `${state.project?.name}/${state.collection}/_all`
+    },
+    getApikey(state: StoreCollections): string | undefined {
+      return state.project?.apikey
     },
     getCollections(state: StoreCollections): string[] {
       return state.project?.collections ?? []
