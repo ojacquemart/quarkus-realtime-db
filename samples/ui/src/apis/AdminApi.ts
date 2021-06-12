@@ -1,15 +1,17 @@
 import { ApiResponse, errorResponse } from '@/apis/ApiResponse'
-import { NamePayload } from '@/apis/NamePayload'
+import { NewNameRequest } from '@/apis/NewNameRequest'
+import { NewCollectionRequest } from '@/apis/NewCollectionRequest'
+import { ProjectModel } from '@/apis/ProjectModel'
 
 export class AdminApi {
 
-  static async createProject(payload: NamePayload) {
+  static async createProject(request: NewNameRequest) {
     return fetch('http://localhost:8080/admin/api/projects', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(request),
     })
   }
 
@@ -26,6 +28,22 @@ export class AdminApi {
 
       return errorResponse()
     }
+  }
+
+  static async fetchProject(name: string): Promise<ProjectModel> {
+    const response = await fetch(`http://localhost:8080/admin/api/projects/${name}`)
+
+    return response.json()
+  }
+
+  static async createCollection(request: NewCollectionRequest) {
+    return fetch(`http://localhost:8080/admin/api/projects/${request.project}/collections`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({name: request.collection}),
+    })
   }
 
 }

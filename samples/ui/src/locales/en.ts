@@ -17,7 +17,8 @@ const en = {
   },
   collections: {
     project: 'Project',
-    new_collection: 'Collection',
+    collection: 'Collection',
+    new_collection: 'New collection',
   },
 }
 

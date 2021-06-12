@@ -1,6 +1,8 @@
 import { Module } from 'vuex'
-import { AdminApi, NamePayload } from '@/apis/AdminApi'
+
+import { AdminApi } from '@/apis/AdminApi'
 import { ApiResponse } from '@/apis/ApiResponse'
+import { NewNameRequest } from '@/apis/NewNameRequest'
 
 interface StoreProjects {
   loading?: boolean
@@ -23,7 +25,7 @@ const projectsStore: Module<StoreProjects, unknown> = {
     },
   },
   actions: {
-    async createProject(context, payload: NamePayload) {
+    async createProject(context, payload: NewNameRequest) {
       await AdminApi.createProject(payload)
 
       await context.dispatch('fetchProjects')

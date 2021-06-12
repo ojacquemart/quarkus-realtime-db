@@ -4,19 +4,8 @@
       {{ t('collections.project') }} {{ $route.params.name }}
     </span>
 
-    <button class="rounded bg-secondary hover:bg-blue-700 py-2 px-4 text-white">➕ {{
-        t('collections.new_collection')
-      }}
-    </button>
-
-    <div class="relative mt-6 border-none">
-      <select
-        class="bg-secondary-light appearance-none border-none inline-block text-black py-3 pl-3 pr-8 rounded leading-tight w-full">
-        <option class="pt-6">demo</option>
-        <option>config</option>
-        <option>credentials</option>
-      </select>
-    </div>
+    <rtdb-new-collection></rtdb-new-collection>
+    <rtdb-collections-select></rtdb-collections-select>
 
     <div class="mt-4">
       <div class="inline-block sm:mb-2 md:mb-2 border border-white p-2 rounded-lg select-all">
@@ -52,14 +41,29 @@
 <script lang="typescript">
 import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+
+import CollectionsSelect from '@/components/CollectionsSelect.vue'
+import NewCollection from '@/components/NewCollection.vue'
 
 export default defineComponent({
+  components: {
+    'rtdb-collections-select': CollectionsSelect,
+    'rtdb-new-collection': NewCollection,
+  },
   setup: () => {
     const activeId = ref(-1)
+    const store = useStore()
+    const route = useRoute()
+    store.dispatch('collections/fetchProject', route.params.name)
 
     return {
-      activeId,
       ...useI18n(),
+      activeId,
+      changeCollection: ($event) => {
+        store.commit('collections/setCollection', $event.target.value)
+      },
     }
   },
 })

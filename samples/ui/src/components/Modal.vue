@@ -1,6 +1,6 @@
 <template>
-  <TransitionRoot :show="isOpened" as="template">
-    <Dialog :open="isOpened" as="div" class="fixed z-10 inset-0 overflow-y-auto" static @close="cancel">
+  <TransitionRoot :show="open" as="template">
+    <Dialog :open="open" as="div" class="fixed z-10 inset-0 overflow-y-auto" static @close="open = false">
       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                          leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
@@ -40,10 +40,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { computed, defineComponent } from 'vue'
 
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { useI18n } from 'vue-i18n'
 
 export default defineComponent({
   components: {
@@ -53,22 +53,26 @@ export default defineComponent({
     TransitionChild,
     TransitionRoot,
   },
-  emits: ['update:is-opened'],
   props: {
     isOpened: {
       type: Boolean,
       default: false,
     },
   },
-  setup: () => {
+  setup(props, {emit}) {
+    const toggleOpen = (value) => {
+      emit('update:is-opened', value)
+    }
+    const open = computed({
+      get: () => props.isOpened,
+      set: (value) => toggleOpen(value),
+    })
+
     return {
       ...useI18n(),
+      open,
+      cancel: () => toggleOpen(false),
     }
-  },
-  methods: {
-    cancel() {
-      this.$emit('update:is-opened', false)
-    },
   },
 })
 </script>
