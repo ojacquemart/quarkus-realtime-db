@@ -1,33 +1,31 @@
 import { Module } from 'vuex'
 
+import { StoreCollections } from '@/store/collections/StoreCollections'
+
 import { AdminApi } from '@/apis/AdminApi'
 import { NewNameRequest } from '@/apis/NewNameRequest'
 import { ProjectModel } from '@/apis/ProjectModel'
 
-interface StoreCollections {
-  project?: ProjectModel
-  collection?: string
-}
-
 const collectionsStore: Module<StoreCollections, unknown> = {
   namespaced: true,
   state() {
-    return {}
+    return new StoreCollections()
   },
   mutations: {
     clear(state: StoreCollections) {
-      state.collection = undefined
-      state.project = undefined
+      state.clear()
     },
     setProject(state: StoreCollections, project: ProjectModel) {
       state.project = project
     },
     setCollection(state: StoreCollections, name: string) {
-      state.collection = name
+      state.setCollection(name)
     },
     appendCollection(state: StoreCollections, name: string) {
-      if (state.project?.collections) {
-        state.project.collections = state.project.collections.concat(name)
+      state.appendCollection(name)
+
+      if (!state.hasCollection()) {
+        state.setCollection(name)
       }
     },
   },
@@ -49,14 +47,10 @@ const collectionsStore: Module<StoreCollections, unknown> = {
   },
   getters: {
     hasCollection(state: StoreCollections): boolean {
-      return !!state.collection
+      return state.hasCollection()
     },
     getProjectCollectionUrlPart(state: StoreCollections): string | undefined {
-      if (!state.collection) {
-        return undefined
-      }
-
-      return `${state.project?.name}/${state.collection}/_all`
+      return state.getProjectCollectionUrlPart()
     },
     getApikey(state: StoreCollections): string | undefined {
       return state.project?.apikey

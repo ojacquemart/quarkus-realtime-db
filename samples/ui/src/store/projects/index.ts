@@ -1,14 +1,10 @@
 import { Module } from 'vuex'
 
+import { StoreProjects } from '@/store/projects/StoreProjects'
+
 import { AdminApi } from '@/apis/AdminApi'
 import { ApiResponse } from '@/apis/ApiResponse'
 import { NewNameRequest } from '@/apis/NewNameRequest'
-
-interface StoreProjects {
-  loading?: boolean
-  error?: boolean
-  items?: string[]
-}
 
 const projectsStore: Module<StoreProjects, unknown> = {
   namespaced: true,

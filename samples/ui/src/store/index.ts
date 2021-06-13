@@ -1,25 +1,13 @@
-import { InjectionKey } from 'vue'
-import { createStore, Store, useStore as baseUseStore } from 'vuex'
+import { createStore } from 'vuex'
 
-import projectsStore from '@/store/projects'
-import collectionsStore from '@/store/collections'
-
-export interface State {
-  [key: string]: any
-}
-
-export const key: InjectionKey<Store<State>> = Symbol()
+import projects from '@/store/projects'
+import collections from '@/store/collections'
 
 const store = createStore({
   modules: {
-    projects: projectsStore,
-    collections: collectionsStore,
+    projects,
+    collections,
   },
 })
-
-export function useStore() {
-  // return baseUseStore(key)
-  return baseUseStore()
-}
 
 export default store

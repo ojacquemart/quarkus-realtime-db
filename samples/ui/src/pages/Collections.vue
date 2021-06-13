@@ -45,14 +45,15 @@ export default defineComponent({
     'rtdb-collection-socket-toolbar': CollectionSocketToolbar,
   },
   setup: () => {
-    const activeId = ref(-1)
-    const store = useStore()
     const route = useRoute()
+    const store = useStore()
     store.dispatch('collections/fetchProject', route.params.name)
 
     onUnmounted(() => {
       store.commit('collections/clear')
     })
+
+    const activeId = ref(-1)
 
     return {
       ...useI18n(),
