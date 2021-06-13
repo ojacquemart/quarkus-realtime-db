@@ -5,6 +5,7 @@ import { StoreCollections } from '@/store/collections/StoreCollections'
 import { AdminApi } from '@/apis/AdminApi'
 import { NewNameRequest } from '@/apis/NewNameRequest'
 import { ProjectModel } from '@/apis/ProjectModel'
+import { SocketMessage } from '@/shared/websocket/SocketMessage'
 
 const collectionsStore: Module<StoreCollections, unknown> = {
   namespaced: true,
@@ -57,6 +58,9 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     },
     getCollections(state: StoreCollections): string[] {
       return state.project?.collections ?? []
+    },
+    getMessages(state: StoreCollections): SocketMessage[] {
+      return state.messages
     },
   },
 }

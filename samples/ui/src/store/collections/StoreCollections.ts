@@ -1,18 +1,27 @@
 import { ProjectModel } from '@/apis/ProjectModel'
 
 import { Urls } from '@/shared/Urls'
-import { WebsocketClient } from '@/shared/WebsocketClient'
+import { OnMessageListener } from '@/shared/websocket/OnMessageListener'
+import { SocketMessage } from '@/shared/websocket/SocketMessage'
+import { WebsocketClient } from '@/shared/websocket/WebsocketClient'
 
-export class StoreCollections {
+export class StoreCollections implements OnMessageListener {
   project?: ProjectModel
   collection?: string
+
   websocket = new WebsocketClient()
+  messages: SocketMessage[] = []
+
+  constructor() {
+    this.websocket.listener = this
+  }
 
   clear() {
     this.project = undefined
     this.collection = undefined
 
     this.websocket.close()
+    this.messages = []
   }
 
   hasCollection() {
@@ -23,6 +32,12 @@ export class StoreCollections {
     this.collection = name
 
     this.openWebsocket()
+  }
+
+  appendCollection(name: string) {
+    if (this.project?.collections) {
+      this.project.collections = this.project.collections.concat(name)
+    }
   }
 
   openWebsocket() {
@@ -48,9 +63,16 @@ export class StoreCollections {
     return `${this.project?.name}/${this.collection}/_all`
   }
 
-  appendCollection(name: string) {
-    if (this.project?.collections) {
-      this.project.collections = this.project.collections.concat(name)
+  onReceive(message: SocketMessage) {
+    switch (message.type) {
+      case 'DELETE':
+        this.messages = this.messages.filter((it: SocketMessage) => {
+          return it.content._id !== message.content._id
+        })
+        break
+      case 'CREATE':
+        this.messages.push(message)
+        break
     }
   }
 
