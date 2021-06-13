@@ -1,10 +1,11 @@
 <template>
   <div class="text-left ml-auto mr-auto sm:px-4 md:px-0 sm:w-screen md:w-2/3">
-    <span class="text-xl text-left font-bold mt-6 mb-3 mr-4">
-      {{ t('collections.project') }} {{ $route.params.name }}
-    </span>
-
-    <rtdb-new-collection></rtdb-new-collection>
+    <div class="flex justify-start items-end">
+      <span class="text-xl text-left font-bold mr-4">
+        {{ t('collections.project') }} {{ $route.params.name }}
+      </span>
+      <rtdb-new-collection></rtdb-new-collection>
+    </div>
     <rtdb-collections-select></rtdb-collections-select>
     <rtdb-collection-socket-toolbar></rtdb-collection-socket-toolbar>
 
