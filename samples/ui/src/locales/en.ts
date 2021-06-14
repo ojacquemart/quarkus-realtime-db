@@ -5,6 +5,7 @@ const en = {
     cancel: 'Cancel',
     name: 'Name',
     save: 'Save',
+    content: 'Content',
   },
   footer: {
     title: 'Made with ❤️ using vue 👁️ // vite ⚡',
@@ -19,6 +20,9 @@ const en = {
     project: 'Project',
     collection: 'Collection',
     new_collection: 'New collection',
+    no_data1: 'No data at the moment ⚠️',
+    no_data2: 'Please provide some data with the ➕ button',
+    new_json_entry: 'New JSON entry'
   },
 }
 

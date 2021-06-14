@@ -16,13 +16,13 @@
           <div
             class="inline-block align-bottom bg-primary rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div class="bg-primary px-4 pt-5 pb-4 sm:p-6 sm:pb-4 bg-primary">
-              <div class="sm:flex sm:items-start">
-                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+              <div class="sm:flex sm:items-start flex-col">
+                <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
                   <DialogTitle as="h3" class="text-lg leading-6 font-medium text-white">
                     <slot name="header"></slot>
                   </DialogTitle>
                   <div class="mt-2">
-                    <div class="p-2">
+                    <div class="p-2 w-full">
                       <slot name="body"></slot>
                     </div>
                   </div>

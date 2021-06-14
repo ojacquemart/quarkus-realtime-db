@@ -3,7 +3,6 @@ import { Module } from 'vuex'
 import { StoreCollections } from '@/store/collections/StoreCollections'
 
 import { AdminApi } from '@/apis/AdminApi'
-import { NewNameRequest } from '@/apis/NewNameRequest'
 import { ProjectModel } from '@/apis/ProjectModel'
 import { SocketMessage } from '@/shared/websocket/SocketMessage'
 
@@ -29,21 +28,27 @@ const collectionsStore: Module<StoreCollections, unknown> = {
         state.setCollection(name)
       }
     },
+    sendMessage(state: StoreCollections, text: string) {
+      state.websocket.sendMessage({type: 'CREATE', content: JSON.parse(text)})
+    },
   },
   actions: {
-    async createCollection({state, commit}, request: NewNameRequest) {
+    async createCollection({state, commit}, text: string) {
       await AdminApi.createCollection({
         project: state.project?.name,
-        collection: request.name,
+        collection: text,
       })
 
-      await commit('appendCollection', request.name)
+      await commit('appendCollection', text)
     },
     async fetchProject(context, name: string) {
       const project = await AdminApi.fetchProject(name)
 
       context.commit('setProject', project)
       context.commit('setCollection', project.collections?.[0])
+    },
+    sendMessage(context, text: string) {
+      context.commit('sendMessage', text)
     },
   },
   getters: {
@@ -58,6 +63,9 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     },
     getCollections(state: StoreCollections): string[] {
       return state.project?.collections ?? []
+    },
+    hasMessages(state: StoreCollections): boolean {
+      return state.messages.length > 0
     },
     getMessages(state: StoreCollections): SocketMessage[] {
       return state.messages

@@ -4,7 +4,6 @@ import { StoreProjects } from '@/store/projects/StoreProjects'
 
 import { AdminApi } from '@/apis/AdminApi'
 import { ApiResponse } from '@/apis/ApiResponse'
-import { NewNameRequest } from '@/apis/NewNameRequest'
 
 const projectsStore: Module<StoreProjects, unknown> = {
   namespaced: true,
@@ -21,8 +20,8 @@ const projectsStore: Module<StoreProjects, unknown> = {
     },
   },
   actions: {
-    async createProject(context, payload: NewNameRequest) {
-      await AdminApi.createProject(payload)
+    async createProject(context, text: string) {
+      await AdminApi.createProject({name: text})
 
       await context.dispatch('fetchProjects')
     },

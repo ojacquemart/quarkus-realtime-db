@@ -4,8 +4,12 @@
       {{ t(i18nTitle) }}
     </template>
     <template v-slot:body>
-      <p>{{ t('common.name') }}</p>
-      <input v-model="textView"
+      <p>{{ t(i18nInputLabel || 'common.name') }}</p>
+      <textarea v-model="textView"
+                v-if="inputType === 'textarea'"
+                class="relative outline-none rounded py-3 px-3 w-full h-60 bg-primary shadow text-sm text-white placeholder-gray-400 focus:ring-1 focus:border-gray-300"
+                type="text"/>
+      <input v-model="textView" v-else
              class="relative outline-none rounded py-3 px-3 w-full bg-primary shadow text-sm text-white placeholder-gray-400 focus:ring-1 focus:border-gray-300"
              type="text"/>
     </template>
@@ -37,6 +41,8 @@ export default defineComponent({
   },
   props: [
     'i18nTitle',
+    'i18nInputLabel',
+    'inputType',
     'dispatchType',
     'isOpened',
   ],
@@ -55,7 +61,7 @@ export default defineComponent({
       save: () => {
         console.log(`modalNewText @ save "${textView.value}"`)
 
-        store.dispatch(props.dispatchType, {name: textView.value})
+        store.dispatch(props.dispatchType, textView.value)
         textView.value = null
         open.value = false
       },

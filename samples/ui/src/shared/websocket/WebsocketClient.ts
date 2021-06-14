@@ -1,5 +1,6 @@
 import { ConnectionOptions } from '@/shared/websocket/ConnectionOptions'
 import { OnMessageListener } from '@/shared/websocket/OnMessageListener'
+import { SocketMessage } from '@/shared/websocket/SocketMessage'
 
 export class WebsocketClient {
 
@@ -19,6 +20,10 @@ export class WebsocketClient {
   close() {
     console.log('websocket @ close connection if necessary')
     this.socket?.close()
+  }
+
+  sendMessage(message: SocketMessage) {
+    this.socket?.send(JSON.stringify(message))
   }
 
   private onOpen(options: ConnectionOptions) {

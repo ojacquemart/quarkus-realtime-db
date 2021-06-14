@@ -41,6 +41,7 @@ export class StoreCollections implements OnMessageListener {
   }
 
   openWebsocket() {
+    this.messages = []
     if (!this.hasCollection()) {
 
       return
