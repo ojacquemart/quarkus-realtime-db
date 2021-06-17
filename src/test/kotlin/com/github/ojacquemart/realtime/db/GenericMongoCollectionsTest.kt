@@ -5,10 +5,16 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.vertx.ConsumeEvent
+import io.vertx.core.eventbus.EventBus
+import org.awaitility.Awaitility.await
+import org.awaitility.kotlin.untilNotNull
 import org.bson.Document
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.concurrent.LinkedBlockingDeque
+import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
 @QuarkusTest
@@ -33,6 +39,42 @@ internal class GenericMongoCollectionsTest {
         db = databaseName, collection = collectionName, type = "CREATE",
         data = mapOf("_id" to "foo", "name" to "bar")
       )
+    )
+  }
+
+  @Test
+  fun `should read all documents from a given collection`() {
+    genericMongoCollections.persist(
+      MongoOperation(
+        type = "CREATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf("name" to "foobarqix")
+      )
+    )
+    val lastItemCreated = mongoClient.getDatabase(databaseName)
+      .getCollection(collectionName)
+      .find(BasicDBObject(mapOf("name" to "foobarqix")))
+      .first()
+    val lastId = lastItemCreated?.getObjectId("_id")?.toString()
+
+    genericMongoCollections.read(
+      MongoOperation(
+        type = "READ",
+        db = databaseName, collection = collectionName,
+        data = mapOf("_id" to "_all")
+      )
+    )
+
+    val allItemsOperation = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    Assertions.assertEquals("READ", allItemsOperation.type)
+    Assertions.assertEquals(
+      mapOf(
+        "_id" to "_all",
+        "items" to listOf(
+          mapOf("_id" to "foo", "name" to "bar"),
+          mapOf("_id" to lastId, "name" to "foobarqix"),
+        )
+      ), allItemsOperation.data
     )
   }
 
@@ -77,6 +119,23 @@ internal class GenericMongoCollectionsTest {
     return mongoClient
       .getDatabase(databaseName)
       .getCollection(collectionName)
+  }
+
+  @ApplicationScoped
+  class SimpleClient {
+
+    @Inject
+    lateinit var eventBus: EventBus
+
+    @ConsumeEvent("db-data")
+    fun onDataMessage(data: MongoOperation) {
+      MESSAGES.add(data)
+    }
+
+    companion object {
+      val MESSAGES = LinkedBlockingDeque<MongoOperation>()
+    }
+
   }
 
 }

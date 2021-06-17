@@ -13,6 +13,7 @@ import org.bson.BsonDocument
 import org.bson.BsonDocumentWriter
 import org.bson.BsonValue
 import org.bson.codecs.EncoderContext
+import org.bson.types.ObjectId
 import org.jboss.logging.Logger
 import javax.enterprise.context.ApplicationScoped
 import javax.ws.rs.BadRequestException
@@ -95,23 +96,57 @@ class GenericMongoCollections(
     }
   }
 
-  private fun read(operation: MongoOperation) {
+  fun read(operation: MongoOperation) {
     logOperation(operation)
 
     val data = operation.data ?: throw BadRequestException()
+    val id = (data["_id"] as String?) ?: throw BadRequestException()
     val collection = getMongoCollection(operation)
-    val query = BasicDBObject(data)
 
     try {
-      val document = collection.find(query).first()
+      val content = when (id) {
+        "_all" -> readAll(collection)
+        else -> findOne(id, collection)
+      }
 
-      eventBus.publish("db-data", operation.copy(data = document))
+      eventBus.publish("db-data", operation.copy(data = content))
     } catch (e: Exception) {
-      logger.error("Error while reading {query: $query}", e)
+      logger.error("Error while reading data", e)
 
       publishError(operation)
     }
   }
+
+  fun readAll(collection: MongoCollection<JsonDocument>): JsonDocument {
+    logger.trace("Read all collection items")
+
+    val documents = collection.find(BasicDBObject()).toList()
+    val items = documents
+      .map {
+        when (it["_id"] is ObjectId) {
+          true -> stringifyObjectId(it)
+          else -> it
+        }
+      }
+
+    return mapOf(
+      "_id" to "_all",
+      "items" to items
+    )
+  }
+
+  private fun stringifyObjectId(it: JsonDocument): MutableMap<Any?, Any?> {
+    val map = it.toMutableMap()
+    val id = it["_id"] as ObjectId
+    map["_id"] = id.toString()
+
+    return map
+  }
+
+  fun findOne(
+    id: String,
+    collection: MongoCollection<JsonDocument>
+  ) = collection.find(BasicDBObject(mapOf("_id" to id))).first()
 
   fun delete(operation: MongoOperation) {
     logger.trace("Delete operation {id: ${operation.id}}")

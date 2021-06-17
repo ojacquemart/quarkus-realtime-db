@@ -91,7 +91,6 @@ class ProjectCollectionSocket(
   fun onDataMessage(data: MongoOperation) {
     logger.trace("Receive message from the database")
 
-
     sessionStore.notifyClients(data)
   }
 
