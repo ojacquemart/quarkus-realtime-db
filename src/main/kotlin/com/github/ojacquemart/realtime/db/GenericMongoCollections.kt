@@ -117,7 +117,7 @@ class GenericMongoCollections(
     }
   }
 
-  fun readAll(collection: MongoCollection<JsonDocument>): JsonDocument {
+  private fun readAll(collection: MongoCollection<JsonDocument>): JsonDocument {
     logger.trace("Read all collection items")
 
     val documents = collection.find(BasicDBObject()).toList()
@@ -143,7 +143,7 @@ class GenericMongoCollections(
     return map
   }
 
-  fun findOne(
+  private fun findOne(
     id: String,
     collection: MongoCollection<JsonDocument>
   ) = collection.find(BasicDBObject(mapOf("_id" to id))).first()

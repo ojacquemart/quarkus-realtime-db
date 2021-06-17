@@ -43,6 +43,53 @@ internal class GenericMongoCollectionsTest {
   }
 
   @Test
+  fun `should persist a document`() {
+    genericMongoCollections.persist(
+      MongoOperation(
+        type = "CREATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf(
+          "_id" to "foo-bar-qix",
+          "name" to "foobarqix"
+        ),
+      )
+    )
+
+    val collection = getCollection()
+    val document = collection.find(BasicDBObject(mapOf("_id" to "foo-bar-qix"))).first()
+
+    Assertions.assertNotNull(document)
+    Assertions.assertEquals("foo-bar-qix", document?.getString("_id"))
+    Assertions.assertEquals("foobarqix", document?.getString("name"))
+  }
+
+  @Test
+  fun `should receive a message on a duplicate document error`() {
+    genericMongoCollections.persist(
+      MongoOperation(
+        type = "CREATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf(
+          "_id" to "foo",
+          "name" to "foobarqix"
+        ),
+      )
+    )
+
+    val error = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    Assertions.assertEquals("ERROR", error.type)
+    Assertions.assertEquals(
+      mapOf(
+        "reason" to "DUPLICATE",
+        "source" to mapOf(
+          "_id" to "foo",
+          "name" to "foobarqix"
+        ),
+      ), error.data
+    )
+  }
+
+  @Test
   fun `should read all documents from a given collection`() {
     genericMongoCollections.persist(
       MongoOperation(
@@ -51,8 +98,7 @@ internal class GenericMongoCollectionsTest {
         data = mapOf("name" to "foobarqix")
       )
     )
-    val lastItemCreated = mongoClient.getDatabase(databaseName)
-      .getCollection(collectionName)
+    val lastItemCreated = getCollection()
       .find(BasicDBObject(mapOf("name" to "foobarqix")))
       .first()
     val lastId = lastItemCreated?.getObjectId("_id")?.toString()
@@ -79,27 +125,41 @@ internal class GenericMongoCollectionsTest {
   }
 
   @Test
-  fun `should persist a document`() {
-    genericMongoCollections.persist(
+  fun `should read a single document from a given collection`() {
+    genericMongoCollections.read(
       MongoOperation(
-        type = "CREATE",
+        type = "READ",
         db = databaseName, collection = collectionName,
-        data = mapOf(
-          "_id" to "foo-bar-qix",
-          "name" to "foobarqix"
-        ),
+        data = mapOf("_id" to "foo")
       )
     )
 
-    val query = BasicDBObject()
-    query["_id"] = "foo-bar-qix"
+    val foo = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    Assertions.assertEquals("READ", foo.type)
+    Assertions.assertEquals(
+      mapOf(
+        "_id" to "foo",
+        "name" to "bar"
+      ), foo.data
+    )
+  }
 
-    val collection = getCollection()
-    val document = collection.find(query).first()
+  @Test
+  fun `should update an existing document`() {
+    genericMongoCollections.persistOrUpdate(
+      MongoOperation(
+        type = "UPDATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf(
+          "_id" to "foo", "name" to "foobar"
+        )
+      )
+    )
 
-    Assertions.assertNotNull(document)
-    Assertions.assertEquals("foo-bar-qix", document?.getString("_id"))
-    Assertions.assertEquals("foobarqix", document?.getString("name"))
+    val document = getCollection()
+      .find(BasicDBObject(mapOf("_id" to "foo")))
+      .first()
+    Assertions.assertEquals("foobar", document?.get("name"))
   }
 
   @Test
