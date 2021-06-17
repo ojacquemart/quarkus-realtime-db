@@ -1,20 +1,12 @@
 <template>
-  <div class="mt-2 py-2 rounded-lg bg-secondary-light text-black" v-if="$store.getters['collections/hasMessages']">
-    <div v-for="(message, index) in $store.getters['collections/getMessages']" class="cursor-pointer py-1 px-2">
-      <div class="inline-table" @click="activeId = index">
-          <div class="inline">
-            <span class="mr-2">➕</span>
-            <span>{{ message.content._id }}</span>
-          </div>
-        <div class="inline">
-          <span class="opacity-100 sm:opacity-0 hover:opacity-90 ml-0 md:ml-2">📝</span>
-          <span class="opacity-100 sm:opacity-0 hover:opacity-90 ml-2">🗑️</span>
-        </div>
+  <div v-if="$store.getters['collections/hasMessages']" class="mt-2 py-2 rounded-lg bg-secondary-light text-black">
+    <transition-group name="list" tag="div">
+      <div v-for="(message, index) in $store.getters['collections/getMessages']"
+           v-bind:key="index"
+           class="cursor-pointer py-1 px-2" v-bind:class="[message.type]">
+        <rtdb-collection-element-item :index="index" :message="message"></rtdb-collection-element-item>
       </div>
-      <div v-if="activeId === index" class="mt-2">
-        <pre class="p-2 bg-gray-200">{{ message.content }}</pre>
-      </div>
-    </div>
+    </transition-group>
   </div>
   <div v-else>
     <p class="text-center mt-4">{{ t('collections.no_data1') }}</p>
@@ -23,18 +15,62 @@
 </template>
 
 <script lang="typescript">
-import { defineComponent, ref } from 'vue'
-
+import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-export default defineComponent({
-  setup: () => {
-    const activeId = ref(-1)
+import CollectionElementItem from '@/components/CollectionElementItem.vue'
 
+export default defineComponent({
+  components: {
+    'rtdb-collection-element-item': CollectionElementItem,
+  },
+  setup: () => {
     return {
       ...useI18n(),
-      activeId,
     }
   },
 })
 </script>
+
+<style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s ease;
+}
+
+.UPDATE {
+  animation: update 1s ease;
+}
+
+.DELETE {
+  animation: delete 1s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+.list-enter-from {
+  background: green;
+}
+
+@keyframes update {
+  0% {
+    background: orange;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes delete {
+  0% {
+    background: red;
+  }
+  100% {
+    background: transparent;
+  }
+}
+</style>

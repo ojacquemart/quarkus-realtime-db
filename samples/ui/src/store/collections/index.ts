@@ -28,8 +28,11 @@ const collectionsStore: Module<StoreCollections, unknown> = {
         state.setCollection(name)
       }
     },
-    sendMessage(state: StoreCollections, text: string) {
-      state.websocket.sendMessage({type: 'CREATE', content: JSON.parse(text)})
+    setActiveId(state: StoreCollections, index: number) {
+      state.activeId = index
+    },
+    sendMessage(state: StoreCollections, message: SocketMessage) {
+      state.websocket.sendMessage(message)
     },
   },
   actions: {
@@ -47,8 +50,11 @@ const collectionsStore: Module<StoreCollections, unknown> = {
       context.commit('setProject', project)
       context.commit('setCollection', project.collections?.[0])
     },
+    deleteMessageId(context, id: string) {
+      context.commit('sendMessage', {type: 'DELETE', content: {_id: id}})
+    },
     sendMessage(context, text: string) {
-      context.commit('sendMessage', text)
+      context.commit('sendMessage', {type: 'CREATE', content: JSON.parse(text)})
     },
   },
   getters: {
@@ -63,6 +69,9 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     },
     getCollections(state: StoreCollections): string[] {
       return state.project?.collections ?? []
+    },
+    getActiveId(state: StoreCollections): number {
+      return state.activeId
     },
     hasMessages(state: StoreCollections): boolean {
       return state.messages.length > 0

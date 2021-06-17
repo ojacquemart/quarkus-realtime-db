@@ -30,6 +30,7 @@ export class WebsocketClient {
     console.log('websocket @ connection initialized, verifying the apikey...')
 
     this.socket?.send(JSON.stringify({type: 'HELLO', content: options.apikey}))
+    this.socket?.send(JSON.stringify({type: 'READ', content: {_id: '_all'}}))
   }
 
   private onMessage(message: MessageEvent) {

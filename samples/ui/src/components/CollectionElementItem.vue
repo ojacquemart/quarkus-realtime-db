@@ -1,0 +1,31 @@
+<template>
+  <div class="inline-table" @click="$store.commit('collections/setActiveId', index)">
+    <div class="inline">
+      <span class="mr-2">➕</span>
+      <span>{{ message.content._id }}</span>
+    </div>
+    <rtdb-collection-element-actions :message-id="message.content['_id']"></rtdb-collection-element-actions>
+  </div>
+  <div v-if="$store.getters['collections/getActiveId'] === index" class="mt-2">
+    <pre class="p-2 bg-gray-200">{{ message.content }}</pre>
+  </div>
+</template>
+
+<script lang="typescript">
+import { defineComponent } from 'vue'
+
+import CollectionElementActions from '@/components/CollectionElementActions.vue'
+
+export default defineComponent({
+  components: {
+    'rtdb-collection-element-actions': CollectionElementActions,
+  },
+  props: [
+    'message',
+    'index',
+  ],
+  setup: () => {
+    return {}
+  },
+})
+</script>

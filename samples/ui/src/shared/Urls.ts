@@ -1,4 +1,5 @@
-const BASE_URL = 'localhost:8080'
+const BASE_URL = '192.168.0.15:8080'
+// const BASE_URL = 'localhost:8080'
 
 export class Urls {
 

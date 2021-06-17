@@ -1,22 +1,19 @@
 <template>
   <rtdb-modal v-model:is-opened="open">
     <template v-slot:header>
-      {{ t(i18nTitle) }}
+      {{ t('modals.deletion.title') }}
     </template>
     <template v-slot:body>
-      <p>{{ t(i18nInputLabel || 'common.name') }}</p>
-      <textarea v-if="inputType === 'textarea'"
-                v-model="textView"
-                class="relative outline-none rounded py-3 px-3 w-full h-60 bg-primary shadow text-sm text-white placeholder-gray-400 focus:ring-1 focus:border-gray-300"
-                type="text"/>
-      <input v-else v-model="textView"
+      <p>{{ t('modals.deletion.confirm') }} <span
+        class="font-bold text-red-300">{{ messageId }}</span></p>
+      <input v-model="confirmValue"
              class="relative outline-none rounded py-3 px-3 w-full bg-primary shadow text-sm text-white placeholder-gray-400 focus:ring-1 focus:border-gray-300"
              type="text"/>
     </template>
     <template v-slot:buttons>
-      <button :disabled="(textView || '').length === 0"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-light text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-500 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
-              type="button" @click="save">
+      <button :disabled="!areEquals"
+              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-500 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-500 disabled:opacity-50 sm:ml-3 sm:w-auto sm:text-sm"
+              type="button" @click="confirm">
         {{ t('common.ok') }}
       </button>
       <button ref="cancelButtonRef"
@@ -33,18 +30,15 @@ import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
-import Modal from '@/components/Modal.vue'
+import Modal from './Modal.vue'
 
 export default defineComponent({
   components: {
     'rtdb-modal': Modal,
   },
   props: [
-    'i18nTitle',
-    'i18nInputLabel',
-    'inputType',
-    'dispatchType',
     'isOpened',
+    'messageId',
   ],
   setup: (props, {emit}) => {
     const store = useStore()
@@ -52,18 +46,26 @@ export default defineComponent({
       get: () => props.isOpened,
       set: (value) => emit('update:is-opened', value),
     })
-    const textView = ref(null)
+    const confirmValue = ref(null)
+    const messageId = ref(props.messageId)
+
+    const areEquals = computed(() => {
+      return confirmValue.value === props.messageId
+    })
 
     return {
       ...useI18n(),
       open,
-      textView,
-      save: () => {
-        console.log(`modalNewText @ save "${textView.value}"`)
+      confirmValue,
+      messageId,
+      areEquals,
+      confirm: async () => {
+        console.log(`modal-confirm-delete @ delete id "${messageId.value}"`)
+        await store.dispatch('collections/deleteMessageId', messageId.value)
 
-        store.dispatch(props.dispatchType, textView.value)
-        textView.value = null
         open.value = false
+        confirmValue.value = null
+
       },
     }
   },

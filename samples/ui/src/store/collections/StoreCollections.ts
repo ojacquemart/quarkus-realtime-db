@@ -2,12 +2,13 @@ import { ProjectModel } from '@/apis/ProjectModel'
 
 import { Urls } from '@/shared/Urls'
 import { OnMessageListener } from '@/shared/websocket/OnMessageListener'
-import { SocketMessage } from '@/shared/websocket/SocketMessage'
+import { IdMessageWithItems, SocketMessage } from '@/shared/websocket/SocketMessage'
 import { WebsocketClient } from '@/shared/websocket/WebsocketClient'
 
 export class StoreCollections implements OnMessageListener {
   project?: ProjectModel
   collection?: string
+  activeId: number = -1
 
   websocket = new WebsocketClient()
   messages: SocketMessage[] = []
@@ -19,6 +20,7 @@ export class StoreCollections implements OnMessageListener {
   clear() {
     this.project = undefined
     this.collection = undefined
+    this.activeId = -1
 
     this.websocket.close()
     this.messages = []
@@ -30,6 +32,7 @@ export class StoreCollections implements OnMessageListener {
 
   setCollection(name: string) {
     this.collection = name
+    this.activeId = -1
 
     this.openWebsocket()
   }
@@ -66,15 +69,58 @@ export class StoreCollections implements OnMessageListener {
 
   onReceive(message: SocketMessage) {
     switch (message.type) {
-      case 'DELETE':
-        this.messages = this.messages.filter((it: SocketMessage) => {
-          return it.content._id !== message.content._id
-        })
-        break
       case 'CREATE':
-        this.messages.push(message)
+        this.createMessage(message)
+        break
+      case 'READ':
+        this.readMessage(message)
+        break
+      case 'UPDATE':
+        this.updateMessage(message)
+        break
+      case 'DELETE':
+        this.removeMessage(message)
         break
     }
   }
 
+  private createMessage(message: SocketMessage) {
+    this.messages.push(message)
+  }
+
+  private readMessage(message: SocketMessage) {
+    const messageWithItems = (message.content as IdMessageWithItems)
+    this.messages.push(...messageWithItems.items.map(it => {
+      return {
+        type: message.type,
+        content: it,
+      }
+    }))
+  }
+
+  private updateMessage(message: SocketMessage) {
+    this.switchType(message)
+  }
+
+  private removeMessage(message: SocketMessage) {
+    this.switchType(message)
+
+    // animate the new message type and then delete the message
+    // css animation is 1 second
+    setTimeout(() => {
+      this.messages = this.messages.filter((it: SocketMessage) => {
+        return it.content._id !== message.content._id
+      })
+    }, 1_000)
+  }
+
+  private switchType(message: SocketMessage) {
+    const actual = this.messages.find((it: SocketMessage) => {
+      return it.content._id === message.content._id
+    })
+    if (actual) {
+      actual.type = message.type
+      actual.content = message.content
+    }
+  }
 }

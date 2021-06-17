@@ -1,10 +1,10 @@
 <template>
   <rtdb-socket-toolbar-button text="➕" @click="isOpened = true"></rtdb-socket-toolbar-button>
   <rtdb-modal-new-text v-model:is-opened="isOpened"
-                       i18n-title="collections.new_json_entry"
+                       dispatch-type="collections/sendMessage"
                        i18n-input-label="common.content"
-                       input-type="textarea"
-                       dispatch-type="collections/sendMessage">
+                       i18n-title="collections.new_json_entry"
+                       input-type="textarea">
   </rtdb-modal-new-text>
 </template>
 
@@ -24,7 +24,7 @@ export default defineComponent({
     const isOpened = ref(false)
 
     return {
-      isOpened
+      isOpened,
     }
   },
 })
