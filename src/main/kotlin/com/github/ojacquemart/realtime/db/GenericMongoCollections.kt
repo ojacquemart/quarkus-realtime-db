@@ -64,16 +64,20 @@ class GenericMongoCollections(
     try {
       collection.insertOne(data)
     } catch (e: Exception) {
-      logger.error("Error while persisting", e)
-
       when (e) {
         is MongoWriteException -> {
+          logger.error("Error while writing document {errorCode: ${e.code}}")
+
           when (e.code) {
             11_000 -> publishError(operation, reason = "DUPLICATE")
             else -> publishError(operation)
           }
         }
-        else -> publishError(operation)
+        else -> {
+          logger.error("Error while writing document", e)
+
+          publishError(operation)
+        }
       }
     }
   }
