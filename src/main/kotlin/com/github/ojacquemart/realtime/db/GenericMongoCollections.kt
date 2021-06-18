@@ -6,6 +6,7 @@ import com.mongodb.MongoWriteException
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
+import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
 import io.quarkus.vertx.ConsumeEvent
 import io.vertx.core.eventbus.EventBus
@@ -85,10 +86,13 @@ class GenericMongoCollections(
     logOperation(operation)
 
     val data = operation.data ?: throw BadRequestException()
-    val query = BsonDocument().append("_id", id)
 
     try {
-      collection.replaceOne(query, data, ReplaceOptions().upsert(true))
+      collection.replaceOne(
+        eq("_id", MongoOperation.id(id.asString().value)),
+        data.filterKeys { it != "_id" },
+        ReplaceOptions().upsert(true)
+      )
     } catch (e: Exception) {
       logger.error("Error while updating {id: $id}", e)
 
@@ -155,7 +159,7 @@ class GenericMongoCollections(
     val collection = getMongoDatabase(operation).getCollection(collectionName)
 
     try {
-      collection.deleteOne(operation.getQueryById())
+      collection.deleteOne(MongoOperation.query(operation.id))
     } catch (e: Exception) {
       logger.error("Error while deleting {id: ${operation.id}", e)
 

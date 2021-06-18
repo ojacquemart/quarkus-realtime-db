@@ -10,6 +10,7 @@ import io.vertx.core.eventbus.EventBus
 import org.awaitility.Awaitility.await
 import org.awaitility.kotlin.untilNotNull
 import org.bson.Document
+import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -163,6 +164,27 @@ internal class GenericMongoCollectionsTest {
   }
 
   @Test
+  fun `should update an existing document with its object id`() {
+    val document = persitAndGetDocument()
+    val id = document?.getObjectId("_id").toString()
+
+    genericMongoCollections.persistOrUpdate(
+      MongoOperation(
+        type = "UPDATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf(
+          "_id" to id, "name" to "foobar"
+        )
+      )
+    )
+
+    val actual = getCollection()
+      .find(BasicDBObject(mapOf("_id" to ObjectId(id))))
+      .first()
+    Assertions.assertEquals("foobar", actual?.get("name"))
+  }
+
+  @Test
   fun `should delete a document by its id`() {
     genericMongoCollections.delete(
       MongoOperation(
@@ -177,6 +199,23 @@ internal class GenericMongoCollectionsTest {
 
   @Test
   fun `should delete a document by its object id`() {
+    val document = persitAndGetDocument()
+
+    genericMongoCollections.delete(
+      MongoOperation(
+        type = "DELETE",
+        db = databaseName, collection = collectionName, id = document?.get("_id").toString(),
+      )
+    )
+
+    Assertions.assertNull(
+      getCollection()
+        .find(BasicDBObject(mapOf("name" to "foobarqix")))
+        .first()
+    )
+  }
+
+  private fun persitAndGetDocument(): Document? {
     genericMongoCollections.persist(
       MongoOperation(
         type = "CREATE",
@@ -192,17 +231,7 @@ internal class GenericMongoCollectionsTest {
       .first()
     Assertions.assertEquals("foobarqix", document?.get("name"))
 
-    genericMongoCollections.delete(
-      MongoOperation(
-        type = "DELETE",
-        db = databaseName, collection = collectionName, id = document?.get("_id").toString(),
-      )
-    )
-
-    Assertions.assertNull(getCollection()
-      .find(BasicDBObject(mapOf("name" to "foobarqix")))
-      .first()
-    )
+    return document
   }
 
   private fun getCollection(): MongoCollection<Document> {

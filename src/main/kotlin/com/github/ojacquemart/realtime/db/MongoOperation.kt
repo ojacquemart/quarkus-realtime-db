@@ -13,17 +13,15 @@ data class MongoOperation(
   val id: String? = null,
 ) {
 
-  fun getQueryById(): BasicDBObject {
-    val id = when (ObjectId.isValid(id)) {
+  companion object {
+    private val JSON_DOCUMENT_CONVERTER = ChangeEventPayloadToJsonDocumentConverter()
+
+    fun query(id: String?) = BasicDBObject(mapOf("_id" to id(id)))
+
+    fun id(id: String?) = when (ObjectId.isValid(id)) {
       true -> ObjectId(id)
       else -> id
     }
-
-    return BasicDBObject(mapOf("_id" to id))
-  }
-
-  companion object {
-    private val JSON_DOCUMENT_CONVERTER = ChangeEventPayloadToJsonDocumentConverter()
 
     fun from(changeEvent: ChangeEvent?): MongoOperation? {
       val payload = changeEvent?.payload ?: return null
