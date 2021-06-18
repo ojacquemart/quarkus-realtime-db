@@ -2,6 +2,8 @@ package com.github.ojacquemart.realtime.db
 
 import com.github.ojacquemart.realtime.db.debezium.ChangeEvent
 import com.github.ojacquemart.realtime.db.debezium.ChangeEventPayloadToJsonDocumentConverter
+import com.mongodb.BasicDBObject
+import org.bson.types.ObjectId
 
 data class MongoOperation(
   val type: String,
@@ -10,6 +12,15 @@ data class MongoOperation(
   val data: JsonDocument? = null,
   val id: String? = null,
 ) {
+
+  fun getQueryById(): BasicDBObject {
+    val id = when (ObjectId.isValid(id)) {
+      true -> ObjectId(id)
+      else -> id
+    }
+
+    return BasicDBObject(mapOf("_id" to id))
+  }
 
   companion object {
     private val JSON_DOCUMENT_CONVERTER = ChangeEventPayloadToJsonDocumentConverter()

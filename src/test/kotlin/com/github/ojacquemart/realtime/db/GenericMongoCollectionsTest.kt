@@ -175,6 +175,36 @@ internal class GenericMongoCollectionsTest {
     Assertions.assertEquals(0, collection.countDocuments())
   }
 
+  @Test
+  fun `should delete a document by its object id`() {
+    genericMongoCollections.persist(
+      MongoOperation(
+        type = "CREATE",
+        db = databaseName, collection = collectionName,
+        data = mapOf(
+          "name" to "foobarqix"
+        ),
+      )
+    )
+
+    val document = getCollection()
+      .find(BasicDBObject(mapOf("name" to "foobarqix")))
+      .first()
+    Assertions.assertEquals("foobarqix", document?.get("name"))
+
+    genericMongoCollections.delete(
+      MongoOperation(
+        type = "DELETE",
+        db = databaseName, collection = collectionName, id = document?.get("_id").toString(),
+      )
+    )
+
+    Assertions.assertNull(getCollection()
+      .find(BasicDBObject(mapOf("name" to "foobarqix")))
+      .first()
+    )
+  }
+
   private fun getCollection(): MongoCollection<Document> {
     return mongoClient
       .getDatabase(databaseName)

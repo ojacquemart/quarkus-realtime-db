@@ -154,11 +154,8 @@ class GenericMongoCollections(
     val collectionName = operation.collection ?: throw BadRequestException()
     val collection = getMongoDatabase(operation).getCollection(collectionName)
 
-    val query = BasicDBObject()
-    query["_id"] = operation.id
-
     try {
-      collection.deleteOne(query)
+      collection.deleteOne(operation.getQueryById())
     } catch (e: Exception) {
       logger.error("Error while deleting {id: ${operation.id}", e)
 
