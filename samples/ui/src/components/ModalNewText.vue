@@ -44,6 +44,7 @@ export default defineComponent({
     'i18nInputLabel',
     'inputType',
     'dispatchType',
+    'textValue',
     'isOpened',
   ],
   setup: (props, {emit}) => {
@@ -52,7 +53,8 @@ export default defineComponent({
       get: () => props.isOpened,
       set: (value) => emit('update:is-opened', value),
     })
-    const textView = ref(null)
+
+    const textView = ref((props.textValue || '').slice())
 
     return {
       ...useI18n(),
@@ -62,8 +64,8 @@ export default defineComponent({
         console.log(`modalNewText @ save "${textView.value}"`)
 
         store.dispatch(props.dispatchType, textView.value)
-        textView.value = null
         open.value = false
+        textView.value = null
       },
     }
   },

@@ -22,14 +22,19 @@ const en = {
     new_collection: 'New collection',
     no_data1: 'No data at the moment ⚠️',
     no_data2: 'Please provide some data with the ➕ button',
-    new_json_entry: 'New JSON entry',
   },
   modals: {
     deletion: {
       title: 'Delete',
-      confirm: 'Confirm the deletion by typing: '
-    }
-  }
+      confirm: 'Confirm the deletion by typing: ',
+    },
+    new_entry: {
+      title: 'New JSON entry',
+    },
+    edit_entry: {
+      title: 'Edit JSON entry',
+    },
+  },
 }
 
 export default en

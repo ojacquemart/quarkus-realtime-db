@@ -1,9 +1,9 @@
 <template>
   <rtdb-socket-toolbar-button text="➕" @click="isOpened = true"></rtdb-socket-toolbar-button>
   <rtdb-modal-new-text v-model:is-opened="isOpened"
-                       dispatch-type="collections/sendMessage"
+                       dispatch-type="collections/createEntry"
                        i18n-input-label="common.content"
-                       i18n-title="collections.new_json_entry"
+                       i18n-title="modals.new_entry.title"
                        input-type="textarea">
   </rtdb-modal-new-text>
 </template>

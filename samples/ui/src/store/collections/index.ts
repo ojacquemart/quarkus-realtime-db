@@ -50,11 +50,14 @@ const collectionsStore: Module<StoreCollections, unknown> = {
       context.commit('setProject', project)
       context.commit('setCollection', project.collections?.[0])
     },
-    deleteMessageId(context, id: string) {
-      context.commit('sendMessage', {type: 'DELETE', content: {_id: id}})
-    },
-    sendMessage(context, text: string) {
+    createEntry(context, text: string) {
       context.commit('sendMessage', {type: 'CREATE', content: JSON.parse(text)})
+    },
+    updateEntry(context, text: string) {
+      context.commit('sendMessage', {type: 'UPDATE', content: JSON.parse(text)})
+    },
+    deleteEntryById(context, id: string) {
+      context.commit('sendMessage', {type: 'DELETE', content: {_id: id}})
     },
   },
   getters: {

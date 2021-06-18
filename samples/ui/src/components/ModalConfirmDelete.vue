@@ -61,7 +61,7 @@ export default defineComponent({
       areEquals,
       confirm: async () => {
         console.log(`modal-confirm-delete @ delete id "${messageId.value}"`)
-        await store.dispatch('collections/deleteMessageId', messageId.value)
+        await store.dispatch('collections/deleteEntryById', messageId.value)
 
         open.value = false
         confirmValue.value = null

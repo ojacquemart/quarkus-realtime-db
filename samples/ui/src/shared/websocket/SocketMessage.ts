@@ -10,5 +10,5 @@ export interface IdMessageWithItems extends IdMessage {
 
 export interface SocketMessage {
   type: MessageType
-  content: IdMessage|IdMessageWithItems
+  content: IdMessage | IdMessageWithItems
 }
