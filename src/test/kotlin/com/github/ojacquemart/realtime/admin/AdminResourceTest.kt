@@ -2,7 +2,7 @@ package com.github.ojacquemart.realtime.admin
 
 import com.github.ojacquemart.realtime.admin.project.ProjectEntity
 import com.github.ojacquemart.realtime.admin.project.ProjectRepository
-import com.github.ojacquemart.realtime.db.MongoTestLifeCycleManager
+import com.github.ojacquemart.realtime.RealtimeDbTestLifeCycleManager
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import javax.inject.Inject
 
 @QuarkusTest
-@QuarkusTestResource(MongoTestLifeCycleManager::class)
+@QuarkusTestResource(RealtimeDbTestLifeCycleManager::class)
 internal class AdminResourceTest {
 
   @Inject

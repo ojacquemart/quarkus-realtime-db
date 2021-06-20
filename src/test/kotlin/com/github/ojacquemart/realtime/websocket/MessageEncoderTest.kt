@@ -1,8 +1,10 @@
 package com.github.ojacquemart.realtime.websocket
 
+import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
+@QuarkusTest
 internal class MessageEncoderTest {
 
   private val encoder = MessageEncoder()

@@ -1,6 +1,6 @@
 package com.github.ojacquemart.realtime.admin.project
 
-import com.github.ojacquemart.realtime.db.MongoTestLifeCycleManager
+import com.github.ojacquemart.realtime.RealtimeDbTestLifeCycleManager
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
 import org.junit.jupiter.api.Assertions
@@ -10,8 +10,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import javax.inject.Inject
 
-@QuarkusTestResource(MongoTestLifeCycleManager::class)
 @QuarkusTest
+@QuarkusTestResource(RealtimeDbTestLifeCycleManager::class)
 internal class ApikeyVerifierTest {
 
   @Inject

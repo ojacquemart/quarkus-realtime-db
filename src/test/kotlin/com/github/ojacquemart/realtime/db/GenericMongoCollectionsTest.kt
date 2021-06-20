@@ -1,12 +1,11 @@
 package com.github.ojacquemart.realtime.db
 
+import com.github.ojacquemart.realtime.RealtimeDbTestLifeCycleManager
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import io.quarkus.test.common.QuarkusTestResource
 import io.quarkus.test.junit.QuarkusTest
-import io.quarkus.vertx.ConsumeEvent
-import io.vertx.core.eventbus.EventBus
 import org.awaitility.Awaitility.await
 import org.awaitility.kotlin.untilNotNull
 import org.bson.Document
@@ -14,12 +13,10 @@ import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.concurrent.LinkedBlockingDeque
-import javax.enterprise.context.ApplicationScoped
 import javax.inject.Inject
 
+@QuarkusTestResource(RealtimeDbTestLifeCycleManager::class)
 @QuarkusTest
-@QuarkusTestResource(MongoTestLifeCycleManager::class)
 internal class GenericMongoCollectionsTest {
 
   val databaseName = "realtime"
@@ -77,7 +74,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val error = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    val error = await().untilNotNull { DbDataClient.MESSAGES.poll() }
     Assertions.assertEquals("ERROR", error.type)
     Assertions.assertEquals(
       mapOf(
@@ -112,7 +109,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val allItemsOperation = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    val allItemsOperation = await().untilNotNull { DbDataClient.MESSAGES.poll() }
     Assertions.assertEquals("READ", allItemsOperation.type)
     Assertions.assertEquals(
       mapOf(
@@ -135,7 +132,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val foo = await().untilNotNull { SimpleClient.MESSAGES.poll() }
+    val foo = await().untilNotNull { DbDataClient.MESSAGES.poll() }
     Assertions.assertEquals("READ", foo.type)
     Assertions.assertEquals(
       mapOf(
@@ -238,23 +235,6 @@ internal class GenericMongoCollectionsTest {
     return mongoClient
       .getDatabase(databaseName)
       .getCollection(collectionName)
-  }
-
-  @ApplicationScoped
-  class SimpleClient {
-
-    @Inject
-    lateinit var eventBus: EventBus
-
-    @ConsumeEvent("db-data")
-    fun onDataMessage(data: MongoOperation) {
-      MESSAGES.add(data)
-    }
-
-    companion object {
-      val MESSAGES = LinkedBlockingDeque<MongoOperation>()
-    }
-
   }
 
 }

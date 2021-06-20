@@ -35,7 +35,7 @@ class ChangeEventPayloadToJsonDocumentConverter {
 
       map
     } catch (e: Exception) {
-      logger.error("Error while parsing the payload data", e)
+      logger.error("Error while parsing the payload data: '$data'")
 
       emptyMap()
     }
@@ -50,7 +50,7 @@ class ChangeEventPayloadToJsonDocumentConverter {
   private fun parseObjectId(map: Map<String, Any>): String {
     val id = getId(map)
 
-    return id?.get("\$oid") as String
+    return (id?.get("\$oid") as String?) ?: ""
   }
 
   private fun getId(map: Map<String, Any>) = map["_id"] as Map<*, *>?

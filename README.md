@@ -187,6 +187,12 @@ If you want to build an _über-jar_, execute the following command:
 
 The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
 
+## Tests
+
+```
+mvn clean verify sonar:sonar -Dsonar.host=$SONAR_HOST -Dsonar.login=$SONAR_LOGIN -Dsonar.password=SONAR_PASSWORD -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco-report/jacoco.xml
+```
+
 ## Creating a native executable
 
 You can create a native executable using:
@@ -203,5 +209,5 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 
 You can then execute your native executable with: `./target/db-realtime-1.0.0-SNAPSHOT-runner`
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html
-.
+If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
+

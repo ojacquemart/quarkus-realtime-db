@@ -2,7 +2,7 @@ package com.github.ojacquemart.realtime.websocket
 
 import com.github.ojacquemart.realtime.admin.project.ProjectEntity
 import com.github.ojacquemart.realtime.admin.project.ProjectRepository
-import com.github.ojacquemart.realtime.db.MongoTestLifeCycleManager
+import com.github.ojacquemart.realtime.RealtimeDbTestLifeCycleManager
 import com.mongodb.BasicDBObject
 import com.mongodb.client.MongoClient
 import io.quarkus.test.common.QuarkusTestResource
@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque
 import javax.inject.Inject
 import javax.websocket.*
 
-@QuarkusTestResource(MongoTestLifeCycleManager::class)
+@QuarkusTestResource(RealtimeDbTestLifeCycleManager::class)
 @QuarkusTest
 class ProjectCollectionSocketTest {
 
