@@ -8,7 +8,7 @@ import { WebsocketClient } from '@/shared/websocket/WebsocketClient'
 export class StoreCollections implements OnMessageListener {
   project?: ProjectModel
   collection?: string
-  activeId: number = -1
+  activeIndex: number = -1
 
   websocket = new WebsocketClient()
   messages: SocketMessage[] = []
@@ -20,7 +20,7 @@ export class StoreCollections implements OnMessageListener {
   clear() {
     this.project = undefined
     this.collection = undefined
-    this.activeId = -1
+    this.activeIndex = -1
 
     this.websocket.close()
     this.messages = []
@@ -32,7 +32,7 @@ export class StoreCollections implements OnMessageListener {
 
   setCollection(name: string) {
     this.collection = name
-    this.activeId = -1
+    this.activeIndex = -1
 
     this.openWebsocket()
   }

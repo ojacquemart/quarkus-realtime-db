@@ -34,6 +34,10 @@ const en = {
     edit_entry: {
       title: 'Edit JSON entry',
     },
+    settings: {
+      title: 'Settings',
+      url: 'Backend url:',
+    },
   },
 }
 

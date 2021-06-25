@@ -1,4 +1,7 @@
-const BASE_URL = 'localhost:8080'
+const BASE_URL = 'http://localhost:8080'
+
+const HTTP_SCHEME = 'http'
+const KEY_URL = 'rtdb.url'
 
 export class Urls {
 
@@ -11,7 +14,13 @@ export class Urls {
   }
 
   static baseUrl(protocol: string) {
-    return `${protocol}://${BASE_URL}`
+    const url = (window.localStorage.getItem(KEY_URL) || BASE_URL).replace(HTTP_SCHEME, '')
+
+    return `${protocol}${url}`
+  }
+
+  static setUrl(url) {
+    window.localStorage.setItem(KEY_URL, url)
   }
 
 }

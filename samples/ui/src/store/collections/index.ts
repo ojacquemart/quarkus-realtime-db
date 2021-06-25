@@ -28,8 +28,8 @@ const collectionsStore: Module<StoreCollections, unknown> = {
         state.setCollection(name)
       }
     },
-    setActiveId(state: StoreCollections, index: number) {
-      state.activeId = index
+    setActiveIndex(state: StoreCollections, index: number) {
+      state.activeIndex = index
     },
     sendMessage(state: StoreCollections, message: SocketMessage) {
       state.websocket.sendMessage(message)
@@ -73,8 +73,18 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     getCollections(state: StoreCollections): string[] {
       return state.project?.collections ?? []
     },
-    getActiveId(state: StoreCollections): number {
-      return state.activeId
+    getActiveMessageContent(state: StoreCollections) {
+      if (state.activeIndex !== -1) {
+        return JSON.stringify(state.messages[state.activeIndex]?.content)
+      }
+
+      return ''
+    },
+    getActiveMessageId(state: StoreCollections): string | undefined {
+      return state.messages[state.activeIndex]?.content?._id
+    },
+    getActiveIndex(state: StoreCollections): number {
+      return state.activeIndex
     },
     hasMessages(state: StoreCollections): boolean {
       return state.messages.length > 0

@@ -44,6 +44,7 @@ import { computed, defineComponent } from 'vue'
 
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { useI18n } from 'vue-i18n'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   components: {
@@ -53,18 +54,15 @@ export default defineComponent({
     TransitionChild,
     TransitionRoot,
   },
-  props: {
-    isOpened: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup(props, {emit}) {
+  props: ['modalId'],
+  setup(props) {
+    const store = useStore()
+
     const toggleOpen = (value) => {
-      emit('update:is-opened', value)
+      store.commit('modals/toggle', {id: props.modalId, isOpened: value})
     }
     const open = computed({
-      get: () => props.isOpened,
+      get: () => store.getters['modals/isOpened'](props.modalId),
       set: (value) => toggleOpen(value),
     })
 

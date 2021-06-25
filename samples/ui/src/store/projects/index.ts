@@ -1,9 +1,9 @@
-import { Module, Store } from 'vuex'
+import { Module } from 'vuex'
 
 import { StoreProjects } from '@/store/projects/StoreProjects'
 
 import { AdminApi } from '@/apis/AdminApi'
-import { ApiResponse, pending } from '@/apis/ApiResponse'
+import { ApiResponse } from '@/apis/ApiResponse'
 
 const projectsStore: Module<StoreProjects, unknown> = {
   namespaced: true,
@@ -33,7 +33,7 @@ const projectsStore: Module<StoreProjects, unknown> = {
     },
     isError(state: StoreProjects) {
       return state.isError()
-    }
+    },
   },
 }
 

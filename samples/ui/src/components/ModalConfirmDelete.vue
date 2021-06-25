@@ -1,5 +1,5 @@
 <template>
-  <rtdb-modal v-model:is-opened="open">
+  <rtdb-modal :modal-id="modalId">
     <template v-slot:header>
       {{ t('modals.deletion.title') }}
     </template>
@@ -18,14 +18,14 @@
       </button>
       <button ref="cancelButtonRef"
               class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              type="button" @click="open = false">
+              type="button" @click="$store.commit('modals/close', modalId)">
         {{ t('common.cancel') }}
       </button>
     </template>
   </rtdb-modal>
 </template>
 
-<script lang="typescript">
+<script lang=" typescript">
 import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
@@ -37,35 +37,33 @@ export default defineComponent({
     'rtdb-modal': Modal,
   },
   props: [
-    'isOpened',
-    'messageId',
+    'modalId',
   ],
-  setup: (props, {emit}) => {
+  setup: (props) => {
     const store = useStore()
-    const open = computed({
-      get: () => props.isOpened,
-      set: (value) => emit('update:is-opened', value),
-    })
+
     const confirmValue = ref(null)
-    const messageId = ref(props.messageId)
+    const messageId = computed(() => {
+      return store.getters['collections/getActiveMessageId']
+    })
 
     const areEquals = computed(() => {
-      return confirmValue.value === props.messageId
+      return confirmValue.value === store.getters['collections/getActiveMessageId']
     })
 
     return {
       ...useI18n(),
-      open,
       confirmValue,
+      modalId: props.modalId,
       messageId,
       areEquals,
       confirm: async () => {
         console.log(`modal-confirm-delete @ delete id "${messageId.value}"`)
+
         await store.dispatch('collections/deleteEntryById', messageId.value)
+        await store.commit('modals/close', props.modalId)
 
-        open.value = false
         confirmValue.value = null
-
       },
     }
   },

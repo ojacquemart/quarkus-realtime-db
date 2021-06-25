@@ -1,5 +1,5 @@
 <template>
-  <rtdb-modal v-model:is-opened="open">
+  <rtdb-modal :modal-id="modalId">
     <template v-slot:header>
       {{ t(i18nTitle) }}
     </template>
@@ -21,7 +21,7 @@
       </button>
       <button ref="cancelButtonRef"
               class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-100 text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-0 focus:ring-gray-300 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              type="button" @click="open = false">
+              type="button" @click="$store.commit('modals/close', modalId)">
         {{ t('common.cancel') }}
       </button>
     </template>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="typescript">
-import { computed, defineComponent, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
@@ -40,31 +40,28 @@ export default defineComponent({
     'rtdb-modal': Modal,
   },
   props: [
+    'modalId',
     'i18nTitle',
     'i18nInputLabel',
     'inputType',
     'dispatchType',
     'textValue',
-    'isOpened',
   ],
-  setup: (props, {emit}) => {
+  setup: (props) => {
     const store = useStore()
-    const open = computed({
-      get: () => props.isOpened,
-      set: (value) => emit('update:is-opened', value),
-    })
 
     const textView = ref((props.textValue || '').slice())
 
     return {
       ...useI18n(),
-      open,
+      modalId: props.modalId,
       textView,
       save: () => {
-        console.log(`modalNewText @ save "${textView.value}"`)
+        console.log(`modal-new-text @ save "${textView.value}"`)
 
         store.dispatch(props.dispatchType, textView.value)
-        open.value = false
+        store.commit('modals/close', props.modalId)
+
         textView.value = null
       },
     }
