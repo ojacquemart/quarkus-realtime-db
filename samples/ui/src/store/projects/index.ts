@@ -1,22 +1,18 @@
-import { Module } from 'vuex'
+import { Module, Store } from 'vuex'
 
 import { StoreProjects } from '@/store/projects/StoreProjects'
 
 import { AdminApi } from '@/apis/AdminApi'
-import { ApiResponse } from '@/apis/ApiResponse'
+import { ApiResponse, pending } from '@/apis/ApiResponse'
 
 const projectsStore: Module<StoreProjects, unknown> = {
   namespaced: true,
   state() {
-    return {
-      loading: true,
-    }
+    return new StoreProjects()
   },
   mutations: {
     setProjects(state: StoreProjects, response: ApiResponse<string[]>) {
-      state.loading = response.loading
-      state.error = response.error
-      state.items = response.data
+      state.copy(response)
     },
   },
   actions: {
@@ -31,7 +27,14 @@ const projectsStore: Module<StoreProjects, unknown> = {
       context.commit('setProjects', response)
     },
   },
-  getters: {},
+  getters: {
+    isPending(state: StoreProjects) {
+      return state.isPending()
+    },
+    isError(state: StoreProjects) {
+      return state.isError()
+    }
+  },
 }
 
 export default projectsStore

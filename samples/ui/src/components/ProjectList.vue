@@ -1,7 +1,7 @@
 <template>
-  <rtdb-project-card-skeleton v-if="$store.state.projects.loading"></rtdb-project-card-skeleton>
-  <rtdb-project-card-error v-else-if="$store.state.projects.error"></rtdb-project-card-error>
-  <rtdb-project-card v-for="project in $store.state.projects.items" v-else :project="project"></rtdb-project-card>
+  <rtdb-project-card-skeleton v-if="$store.getters['projects/isPending']"></rtdb-project-card-skeleton>
+  <rtdb-project-card-error v-else-if="$store.getters['projects/isError']"></rtdb-project-card-error>
+  <rtdb-project-card v-else v-for="project in $store.state.projects.items" :project="project"></rtdb-project-card>
 </template>
 
 <script lang="typescript">

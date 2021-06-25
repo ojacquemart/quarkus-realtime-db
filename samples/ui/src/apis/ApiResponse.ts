@@ -1,9 +1,17 @@
 export interface ApiResponse<T> {
-  error?: boolean
-  loading?: boolean
+  status?: ApiStatus
   data?: T
 }
 
-export const errorResponse = <T>(): ApiResponse<T> => {
-  return {error: true, loading: false}
+export enum ApiStatus {
+  PENDING = 'PENDING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR'
+}
+
+export const pending = <T>(): ApiResponse<T> => {
+  return {status: ApiStatus.PENDING}
+}
+export const error = <T>(): ApiResponse<T> => {
+  return {status: ApiStatus.ERROR}
 }

@@ -1,4 +1,4 @@
-import { ApiResponse, errorResponse } from '@/apis/ApiResponse'
+import { ApiResponse, ApiStatus, error } from '@/apis/ApiResponse'
 import { NewNameRequest } from '@/apis/NewNameRequest'
 import { NewCollectionRequest } from '@/apis/NewCollectionRequest'
 import { ProjectModel } from '@/apis/ProjectModel'
@@ -15,14 +15,14 @@ export class AdminApi {
     try {
       const response = await fetch(`${Urls.getBackendUrl()}/admin/api/projects`)
       if (response.ok) {
-        return {data: await response.json(), error: false, loading: false}
+        return {status: ApiStatus.SUCCESS, data: await response.json()}
       }
 
-      return errorResponse()
+      return error()
     } catch (e) {
       console.log('admin-api @ error while gettings the projects', e)
 
-      return errorResponse()
+      return error()
     }
   }
 
