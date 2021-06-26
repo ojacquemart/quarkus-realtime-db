@@ -23,14 +23,13 @@
     </div>
   </div>
   <div v-else>
-    <p class="text-center mt-4">{{ t('collections.no_data1') }}</p>
-    <p class="text-center">{{ t('collections.no_data2') }}</p>
+    <p class="text-center mt-4">{{ $t('collections.no_data1') }}</p>
+    <p class="text-center">{{ $t('collections.no_data2') }}</p>
   </div>
 </template>
 
 <script lang="typescript">
 import { computed, defineComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
 import ModalConfirmDelete from '@/components/ModalConfirmDelete.vue'
@@ -50,7 +49,6 @@ export default defineComponent({
       return store.getters['collections/getActiveMessageContent']
     })
     return {
-      ...useI18n(),
       activeMessageContent,
     }
   },

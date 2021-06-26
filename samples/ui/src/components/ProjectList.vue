@@ -6,7 +6,6 @@
 
 <script lang="typescript">
 import { defineComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
 import ProjectCard from '@/components/ProjectCard.vue'
@@ -23,9 +22,7 @@ export default defineComponent({
     const store = useStore()
     store.dispatch('projects/fetchProjects')
 
-    return {
-      ...useI18n(),
-    }
+    return {}
   },
 })
 

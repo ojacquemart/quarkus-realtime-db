@@ -43,7 +43,6 @@
 import { computed, defineComponent } from 'vue'
 
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -58,8 +57,8 @@ export default defineComponent({
   setup(props) {
     const store = useStore()
 
-    const toggleOpen = (value) => {
-      store.commit('modals/toggle', {id: props.modalId, isOpened: value})
+    const toggleOpen = (isOpened: boolean) => {
+      store.commit('modals/toggle', {id: props.modalId, isOpened})
     }
     const open = computed({
       get: () => store.getters['modals/isOpened'](props.modalId),
@@ -67,7 +66,6 @@ export default defineComponent({
     })
 
     return {
-      ...useI18n(),
       open,
       cancel: () => toggleOpen(false),
     }
