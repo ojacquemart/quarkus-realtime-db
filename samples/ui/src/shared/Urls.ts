@@ -19,7 +19,7 @@ export class Urls {
     return `${protocol}${url}`
   }
 
-  static setUrl(url) {
+  static setUrl(url: string) {
     window.localStorage.setItem(KEY_URL, url)
   }
 

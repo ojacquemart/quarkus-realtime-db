@@ -1,11 +1,12 @@
 <template>
   <div v-if="$store.getters['collections/hasMessages']" class="mt-2 py-2 rounded-lg bg-secondary-light text-black">
     <transition-group name="list" tag="div">
-      <div v-for="(message, index) in $store.getters['collections/getMessages']"
-           v-bind:key="index"
-           class="cursor-pointer py-1 px-2" v-bind:class="[message.type]">
-        <rtdb-collection-element-item :index="index" :message="message"></rtdb-collection-element-item>
-      </div>
+      <template v-for="(message, index) in $store.getters['collections/getMessages']"
+                :key="index">
+        <div class="cursor-pointer py-1 px-2" v-bind:class="[message.type]">
+          <rtdb-collection-element-item :index="index" :message="message"></rtdb-collection-element-item>
+        </div>
+      </template>
     </transition-group>
 
     <div v-if="$store.getters['collections/getActiveIndex'] !== -1">
