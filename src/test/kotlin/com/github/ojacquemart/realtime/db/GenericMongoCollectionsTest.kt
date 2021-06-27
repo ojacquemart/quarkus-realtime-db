@@ -38,6 +38,8 @@ internal class GenericMongoCollectionsTest {
         data = mapOf("_id" to "foo", "name" to "bar")
       )
     )
+
+    DbDataClient.clear()
   }
 
   @Test
@@ -74,7 +76,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val error = await().untilNotNull { DbDataClient.MESSAGES.poll() }
+    val error = await().untilNotNull { DbDataClient.MESSAGES.find { it.type == "ERROR" } }
     Assertions.assertEquals("ERROR", error.type)
     Assertions.assertEquals(
       mapOf(
@@ -109,7 +111,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val allItemsOperation = await().untilNotNull { DbDataClient.MESSAGES.poll() }
+    val allItemsOperation = await().untilNotNull { DbDataClient.MESSAGES.find { it.type == "READ" } }
     Assertions.assertEquals("READ", allItemsOperation.type)
     Assertions.assertEquals(
       mapOf(
@@ -132,7 +134,7 @@ internal class GenericMongoCollectionsTest {
       )
     )
 
-    val foo = await().untilNotNull { DbDataClient.MESSAGES.poll() }
+    val foo = await().untilNotNull { DbDataClient.MESSAGES.find { it.type == "READ" } }
     Assertions.assertEquals("READ", foo.type)
     Assertions.assertEquals(
       mapOf(
@@ -162,7 +164,7 @@ internal class GenericMongoCollectionsTest {
 
   @Test
   fun `should update an existing document with its object id`() {
-    val document = persitAndGetDocument()
+    val document = persistAndGetDocument()
     val id = document?.getObjectId("_id").toString()
 
     genericMongoCollections.persistOrUpdate(
@@ -196,7 +198,7 @@ internal class GenericMongoCollectionsTest {
 
   @Test
   fun `should delete a document by its object id`() {
-    val document = persitAndGetDocument()
+    val document = persistAndGetDocument()
 
     genericMongoCollections.delete(
       MongoOperation(
@@ -212,7 +214,7 @@ internal class GenericMongoCollectionsTest {
     )
   }
 
-  private fun persitAndGetDocument(): Document? {
+  private fun persistAndGetDocument(): Document? {
     genericMongoCollections.persist(
       MongoOperation(
         type = "CREATE",

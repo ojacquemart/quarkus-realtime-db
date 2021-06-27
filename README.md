@@ -1,6 +1,6 @@
 # Real Time Database aka RTDB
 
-[![codecov](https://codecov.io/gh/ojacquemart/quarkus-realtime-db/branch/develop/graph/badge.svg?token=SVQF7QJN63)](https://codecov.io/gh/ojacquemart/quarkus-realtime-db)
+[![Build](https://github.com/ojacquemart/quarkus-realtime-db/actions/workflows/build.yml/badge.svg)](https://github.com/ojacquemart/quarkus-realtime-db/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/ojacquemart/quarkus-realtime-db/branch/develop/graph/badge.svg?token=SVQF7QJN63)](https://codecov.io/gh/ojacquemart/quarkus-realtime-db)
  [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fojacquemart%2Fquarkus-realtime-db.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fojacquemart%2Fquarkus-realtime-db?ref=badge_shield)
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.

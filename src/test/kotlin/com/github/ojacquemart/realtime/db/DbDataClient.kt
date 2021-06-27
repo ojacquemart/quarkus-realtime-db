@@ -19,6 +19,10 @@ class DbDataClient {
 
   companion object {
     val MESSAGES = LinkedBlockingDeque<MongoOperation>()
+
+    fun clear() {
+      MESSAGES.clear()
+    }
   }
 
 }
