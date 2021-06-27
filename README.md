@@ -1,5 +1,7 @@
 # Real Time Database aka RTDB
 
+[![codecov](https://codecov.io/gh/ojacquemart/quarkus-realtime-db/branch/develop/graph/badge.svg?token=SVQF7QJN63)](https://codecov.io/gh/ojacquemart/quarkus-realtime-db)
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 Real Time Database is a project to notice live database changes.
@@ -211,3 +213,6 @@ You can then execute your native executable with: `./target/db-realtime-1.0.0-SN
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.html.
 
+## License
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fojacquemart%2Fquarkus-realtime-db.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fojacquemart%2Fquarkus-realtime-db?ref=badge_large)
