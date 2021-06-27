@@ -90,12 +90,12 @@ export class StoreCollections implements OnMessageListener {
 
   private readMessage(message: SocketMessage) {
     const messageWithItems = (message.content as IdMessageWithItems)
-    this.messages.push(...messageWithItems.items.map(it => {
+    this.messages = messageWithItems.items.map(it => {
       return {
         type: message.type,
         content: it,
       }
-    }))
+    })
   }
 
   private updateMessage(message: SocketMessage) {
