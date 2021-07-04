@@ -24,6 +24,7 @@ jobs:
         with:
           name: jacoco-report
           path: target/jacoco-report/jacoco.xml
+          retention-days: 1
 
   codecov:
     needs: build
