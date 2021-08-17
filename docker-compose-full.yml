@@ -70,6 +70,27 @@ services:
         curl -v -H "Content-Type:application/json" connect:8083/connectors
     networks:
       - rtdb-network
+  realtime-db:
+    image: realtime-db
+    container_name: realtime-db
+    restart: unless-stopped
+    environment:
+      QUARKUS_MONGODB_CONNECTION_STRING: "mongodb://mongo:27017"
+      KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    depends_on:
+      - mongo
+    networks:
+      - rtdb-network
+    ports:
+      - "8080:8080"
+  realtime-ui:
+    image: realtime-ui
+    restart: unless-stopped
+    container_name: realtime-ui
+    networks:
+      - rtdb-network
+    ports:
+      - "3001:80"
 networks:
   rtdb-network:
     external: true
