@@ -26,13 +26,47 @@ modifications.
 - Create a project and its collections
 - Listen MongoDB events through Kafka Connect and CDC (Change Data Capture) with Debezium
 
-## Dev
+## Demo mode
 
-You can setup a running environment with Zookeeper, Kafka, Debezium and Mongo using docker-compose.
+### Docker network
+
+The docker compose uses a custom network named `rdtb-network`.
+
+To rename this network, use:
+
+```sed -i '/rtdb-network/foobarqix-network/g' docker-compose.yml```
+
+### Run the demo
+
+You can setup the whole environment using docker-compose.
+
+The full docker compose starts the kafka, mongo, backend and frontend parts.
 
 ```shell script
-docker-compose up
+# quarkus backend
+./mvnw package
+docker build -f src/main/docker/Dockerfile.jvm -t realtime-db .
+
+# vue sample ui
+cd samples/ui
+docker build -t realtime-ui .
+
+cd ../..
+
+# the whole stack
+docker network create rtdb-network
+docker compose -f docker-compose-full.yml up
 ```
+
+## Dev mode
+
+You can only start the kafka and mongo parts of the stack when you do backend or frontend stuff.
+
+```
+docker compose up
+```
+
+### Quarkus backend
 
 You can run your application in dev mode that enables live coding using:
 ```shell script
@@ -41,9 +75,15 @@ You can run your application in dev mode that enables live coding using:
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
 
+### Sample UI
+
+Go to the `samples/ui` and run the `nom run dev` command.
+
+Check `http://localhost:3001` to configure your projects and collections.
+
 ### Mongo
 
-The MongoDB instance is initialized in a replica set mode. Normally, the docker-compose command does it for you.
+The MongoDB instance starts in a replica set mode. The docker-compose command does it for you.
 
 ### Debezium
 
@@ -52,12 +92,12 @@ Debezium requires a [MongoDB connector](dbz-mongodb-connector.json).
 Here are the curl commands to add the MongoDB connector:
 
 ```shell script
-curl -X DELETE localhost:8083/connectors/rtdb-connector
-curl -X POST -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors/ -d @dbz-mongodb-connector.json
-curl -X GET -H "Accept:application/json" -H "Content-Type:application/json" localhost:8083/connectors
+curl -X DELETE connect:8083/connectors/rtdb-connector
+curl -X POST -H "Accept:application/json" connect:8083/connectors/ -d @dbz-mongodb-connector.json
+curl -X GET -H "Accept:application/json" -H "Content-Type:application/json" connect:8083/connectors
 ```
 
-By default, the reserved databases (admin, config and local) are not monitored.
+By default, the reserved databases (admin, config and local) are not monitored. The docker-compose command does it for you.
 
 ## Kafka
 
@@ -146,7 +186,7 @@ curl -X POST -H "Content-Type: application/json" http://localhost:8080/admin/api
 from the demo collection. Specify a id if you want to be more specific.
 
 ```javascript
-var APIKEY = '1169c5fc-47ca-4da8-8569-04b6c5b52501'
+var APIKEY = '7b4bde3c-4ab2-495f-b06e-f5f51f684e02'
 var socket = new WebSocket('ws://localhost:8080/foobarqix/demo/_all')
 socket.addEventListener('open', (event) => {
     console.log('Connect initialized, verifying the apikey...')
