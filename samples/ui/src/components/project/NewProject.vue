@@ -6,22 +6,5 @@
       <div class="flex items-center justify-center font-bold">{{ $t('projects.new_project') }}</div>
     </div>
   </div>
-
-  <rtdb-modal-new-project
-    dispatch-type="projects/createProject"
-    i18n-title="projects.new_project"
-    modal-id="new-project">
-  </rtdb-modal-new-project>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-import ModalNewText from '@/components/ModalNewText.vue'
-
-export default defineComponent({
-  components: {
-    'rtdb-modal-new-project': ModalNewText,
-  },
-})
-</script>

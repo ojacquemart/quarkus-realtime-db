@@ -8,7 +8,7 @@ const en = {
     content: 'Content',
   },
   footer: {
-    title: 'Made with ❤️ using vue 👁️ // vite ⚡',
+    title: 'Made with ❤️ using vue 👁️ and vite ⚡',
   },
   projects: {
     title: 'Projects',
@@ -26,7 +26,7 @@ const en = {
   modals: {
     deletion: {
       title: 'Delete',
-      confirm: 'Confirm the deletion by typing: ',
+      confirm: 'Confirm the deletion by typing <span class="font-bold text-red-300">{current}</span>',
     },
     new_entry: {
       title: 'New JSON entry',
@@ -36,7 +36,7 @@ const en = {
     },
     settings: {
       title: 'Settings',
-      url: 'Backend url:',
+      url: 'Backend url',
     },
   },
 }

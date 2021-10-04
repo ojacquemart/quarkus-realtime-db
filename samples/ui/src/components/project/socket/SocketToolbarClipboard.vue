@@ -7,7 +7,7 @@
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
-import SocketToolbarButton from '@/components/SocketToolbarButton.vue'
+import SocketToolbarButton from '@/components/project/socket/SocketToolbarButton.vue'
 
 import { Clipboards } from '@/shared/Clipboard'
 import { Urls } from '@/shared/Urls'

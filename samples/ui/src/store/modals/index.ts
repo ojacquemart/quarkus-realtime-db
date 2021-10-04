@@ -20,6 +20,12 @@ const modalsStore: Module<StoreModals, unknown> = {
   },
   actions: {},
   getters: {
+    id: (state: StoreModals) => {
+      return state.id
+    },
+    hasSelection: (state: StoreModals) => {
+      return !!state.id
+    },
     isOpened: (state: StoreModals) => (id: string) => {
       return state.isIdOpened(id)
     },

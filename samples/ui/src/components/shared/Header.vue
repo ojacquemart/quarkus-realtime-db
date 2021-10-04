@@ -10,7 +10,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Settings from '@/components/Settings.vue'
+import Settings from '@/components/shared/Settings.vue'
 
 export default defineComponent({
   components: {

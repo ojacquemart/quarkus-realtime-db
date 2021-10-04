@@ -5,18 +5,19 @@
   </div>
 </template>
 
-<script lang="typescript">
+<script lang="ts">
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
   props: [
-    'message',
+    'index',
   ],
-  setup: () => {
+  setup: (props) => {
     const store = useStore()
 
-    const showModal = (id) => {
+    const showModal = (id: string) => {
+      store.commit('collections/setActiveIndex', props.index)
       store.commit('modals/open', id)
     }
 

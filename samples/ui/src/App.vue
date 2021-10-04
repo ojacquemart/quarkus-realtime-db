@@ -5,6 +5,7 @@
       <Suspense>
         <router-view></router-view>
       </Suspense>
+      <rtdb-modal v-if="$store.getters['modals/hasSelection']"></rtdb-modal>
     </div>
     <rtdb-footer></rtdb-footer>
   </div>
@@ -13,13 +14,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Header from '@/components/Header.vue'
-import Footer from '@/components/Footer.vue'
+import Header from '@/components/shared/Header.vue'
+import Footer from '@/components/shared/Footer.vue'
+import DynamicModal from '@/components/modal/DynamicModal.vue'
 
 export default defineComponent({
   name: 'App',
   components: {
     'rtdb-header': Header,
+    'rtdb-modal': DynamicModal,
     'rtdb-footer': Footer,
   },
 })

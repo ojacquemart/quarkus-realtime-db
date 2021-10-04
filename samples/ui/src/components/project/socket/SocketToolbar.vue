@@ -13,7 +13,7 @@ import { defineComponent } from 'vue'
 
 import SocketUrl from './SocketUrl.vue'
 import SocketToolbarClipboard from './SocketToolbarClipboard.vue'
-import SocketNewEntry from '@/components/SocketNewEntry.vue'
+import SocketNewEntry from '@/components/project/socket/SocketNewEntry.vue'
 
 export default defineComponent({
   components: {
