@@ -8,9 +8,9 @@
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
-import ProjectCard from '@/components/ProjectCard.vue'
-import ProjectCardError from '@/components/ProjectCardError.vue'
-import ProjectCardSkeleton from '@/components/ProjectCardSkeleton.vue'
+import ProjectCard from '@/components/project/ProjectCard.vue'
+import ProjectCardError from '@/components/project/ProjectCardError.vue'
+import ProjectCardSkeleton from '@/components/project/ProjectCardSkeleton.vue'
 
 export default defineComponent({
   components: {

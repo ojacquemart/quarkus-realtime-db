@@ -19,10 +19,10 @@ import { useI18n } from 'vue-i18n'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
-import CollectionsSelect from '@/components/CollectionsSelect.vue'
-import CollectionSocketToolbar from '@/components/SocketToolbar.vue'
-import CollectionElementsView from '@/components/CollectionElementsView.vue'
-import NewCollection from '@/components/NewCollection.vue'
+import CollectionsSelect from '@/components/project/collection/CollectionsSelect.vue'
+import CollectionSocketToolbar from '@/components/project/socket/SocketToolbar.vue'
+import CollectionElementsView from '@/components/project/collection/CollectionElementsView.vue'
+import NewCollection from '@/components/project/collection/NewCollection.vue'
 
 export default defineComponent({
   components: {

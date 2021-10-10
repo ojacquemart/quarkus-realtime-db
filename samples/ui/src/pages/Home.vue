@@ -13,8 +13,8 @@
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import NewProject from '@/components/NewProject.vue'
-import ProjectList from '@/components/ProjectList.vue'
+import NewProject from '@/components/project/NewProject.vue'
+import ProjectList from '@/components/project/ProjectList.vue'
 
 export default defineComponent({
   name: 'Home',
