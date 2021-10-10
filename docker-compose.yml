@@ -7,6 +7,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "22181:2181"
     networks:
       - rtdb-network
   kafka:
@@ -15,6 +17,8 @@ services:
     restart: unless-stopped
     depends_on:
       - zookeeper
+    ports:
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -29,6 +33,8 @@ services:
     image: mongo:latest
     restart: unless-stopped
     command: [ "mongod", "--replSet", "rs0" ]
+    ports:
+      - "27017:27017"
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
@@ -42,6 +48,8 @@ services:
       - mongo
     depends_on:
       - kafka
+    ports:
+      - "8083:8083"
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
       - GROUP_ID=1
