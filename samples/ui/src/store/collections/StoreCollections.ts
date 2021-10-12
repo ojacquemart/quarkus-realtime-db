@@ -1,11 +1,10 @@
 import { ProjectModel } from '@/apis/ProjectModel'
-
-import { Urls } from '@/shared/Urls'
 import { OnMessageListener } from '@/shared/websocket/OnMessageListener'
 import { IdMessageWithItems, SocketMessage } from '@/shared/websocket/SocketMessage'
 import { WebsocketClient } from '@/shared/websocket/WebsocketClient'
 
 export class StoreCollections implements OnMessageListener {
+  websocketUrl?: string
   project?: ProjectModel
   collection?: string
   activeIndex: number = -1
@@ -30,6 +29,10 @@ export class StoreCollections implements OnMessageListener {
     return !!this.collection
   }
 
+  setWebsocketUrl(url: string) {
+    this.websocketUrl = url
+  }
+
   setCollection(name: string) {
     this.collection = name
     this.activeIndex = -1
@@ -50,7 +53,7 @@ export class StoreCollections implements OnMessageListener {
       return
     }
 
-    const url = [Urls.getWebsocketUrl(), this.getProjectCollectionUrlPart()].join('/')
+    const url = [this.websocketUrl, this.getProjectCollectionUrlPart()].join('/')
     const apikey = this.project?.apikey
     if (!apikey) {
       throw Error('No apikey defined!')

@@ -4,7 +4,8 @@
       {{ $t(modal.title) }}
     </template>
     <template v-slot:body>
-      <div v-for="control of modal.controls">
+      <div v-for="(control, index) of modal.controls"
+           :class="{'mb-4': Number(index) < modal.controls.length - 1}">
         <p v-if="control.label" v-html="control.label"></p>
         <p v-else v-html="$t(control.i18nLabel)"></p>
         <input v-if="control.type === 'text'" v-model="control.value"

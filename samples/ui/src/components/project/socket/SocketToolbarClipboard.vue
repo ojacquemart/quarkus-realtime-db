@@ -10,7 +10,6 @@ import { useStore } from 'vuex'
 import SocketToolbarButton from '@/components/project/socket/SocketToolbarButton.vue'
 
 import { Clipboards } from '@/shared/Clipboard'
-import { Urls } from '@/shared/Urls'
 
 export default defineComponent({
   components: {
@@ -21,7 +20,10 @@ export default defineComponent({
 
     return {
       copyWsUrl: async () => Clipboards.copy(
-        [Urls.getWebsocketUrl(), store.getters['collections/getProjectCollectionUrlPart']].join('/'),
+        [
+          store.getters['settings/getWebsocketUrl'],
+          store.getters['collections/getProjectCollectionUrlPart'],
+        ].join('/'),
       ),
       copyApikey: async () => Clipboards.copy(
         store.getters['collections/getApikey'],

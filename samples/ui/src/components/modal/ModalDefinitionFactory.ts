@@ -28,16 +28,37 @@ export class ModalDefinitionFactory {
       settings: new ModalDefinition(
         'settings',
         'modals.settings.title',
-        'settings/setUrl',
+        'settings/setSettings',
         [
           {
-            key: 'name',
+            key: 'url',
             i18nLabel: 'modals.settings.url',
             value: ref(store.getters['settings/getUrl']),
             type: 'text',
             required: true,
           },
+          {
+            key: 'apikeyHeaderName',
+            i18nLabel: 'modals.settings.apikey_header_name',
+            value: ref(store.getters['settings/getApikeyHeaderName']),
+            type: 'text',
+          },
+          {
+            key: 'apikeyPrefix',
+            i18nLabel: 'modals.settings.apikey_prefix_value',
+            value: ref(store.getters['settings/getApikeyPrefix']),
+            type: 'text',
+          },
+          {
+            key: 'apikey',
+            i18nLabel: 'modals.settings.apikey_value',
+            value: ref(store.getters['settings/getApikey']),
+            type: 'text',
+          },
         ],
+        {
+          payloadObject: true,
+        },
       ),
       'new-project': new ModalDefinition(
         'new-project',
@@ -66,8 +87,10 @@ export class ModalDefinitionFactory {
             required: true,
           },
         ],
-        (controls: FormControl[]) =>
-          FormControlValidators.equalsFirstRequired(controls, store.getters['collections/getActiveMessageId']),
+        {
+          validator: (controls: FormControl[]) =>
+            FormControlValidators.equalsFirstRequired(controls, store.getters['collections/getActiveMessageId']),
+        },
       ),
       'new-collection': new ModalDefinition(
         'new-collection',

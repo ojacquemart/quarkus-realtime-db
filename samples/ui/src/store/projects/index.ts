@@ -1,9 +1,9 @@
 import { Module } from 'vuex'
 
-import { StoreProjects } from '@/store/projects/StoreProjects'
-
 import { AdminApi } from '@/apis/AdminApi'
 import { ApiResponse } from '@/apis/ApiResponse'
+
+import { StoreProjects } from '@/store/projects/StoreProjects'
 
 const projectsStore: Module<StoreProjects, unknown> = {
   namespaced: true,
@@ -16,15 +16,16 @@ const projectsStore: Module<StoreProjects, unknown> = {
     },
   },
   actions: {
-    async createProject(context, text: string) {
-      await AdminApi.createProject({name: text})
+    async createProject({dispatch, rootGetters}, text: string) {
+      const newProject = {...rootGetters['settings/getApiRequest'], name: text}
+      await AdminApi.createProject(newProject)
 
-      await context.dispatch('fetchProjects')
+      await dispatch('fetchProjects')
     },
-    async fetchProjects(context) {
-      const response = await AdminApi.fetchProjects()
+    async fetchProjects({commit, rootGetters}) {
+      const response = await AdminApi.fetchProjects(rootGetters['settings/getApiRequest'])
 
-      context.commit('setProjects', response)
+      commit('setProjects', response)
     },
   },
   getters: {
