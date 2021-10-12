@@ -18,6 +18,9 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     setProject(state: StoreCollections, project: ProjectModel) {
       state.project = project
     },
+    setWebsocketUrl(state: StoreCollections, wsUrl: string) {
+      state.setWebsocketUrl(wsUrl)
+    },
     setCollection(state: StoreCollections, name: string) {
       state.setCollection(name)
     },
@@ -36,19 +39,24 @@ const collectionsStore: Module<StoreCollections, unknown> = {
     },
   },
   actions: {
-    async createCollection({state, commit}, text: string) {
+    async createCollection({state, commit, rootGetters}, text: string) {
       await AdminApi.createCollection({
+        ...rootGetters['settings/getApiRequest'],
         project: state.project?.name,
         collection: text,
       })
 
-      await commit('appendCollection', text)
+      return commit('appendCollection', text)
     },
-    async fetchProject(context, name: string) {
-      const project = await AdminApi.fetchProject(name)
+    async fetchProject({commit, rootGetters}, name: string) {
+      const project = await AdminApi.fetchProject({
+        ...rootGetters['settings/getApiRequest'],
+        name,
+      })
 
-      context.commit('setProject', project)
-      context.commit('setCollection', project.collections?.[0])
+      commit('setProject', project)
+      commit('setWebsocketUrl', rootGetters['settings/getWebsocketUrl'])
+      commit('setCollection', project.collections?.[0])
     },
     createEntry(context, text: string) {
       context.commit('sendMessage', {type: 'CREATE', content: JSON.parse(text)})

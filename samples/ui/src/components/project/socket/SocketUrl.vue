@@ -6,13 +6,14 @@
 
 <script lang="typescript">
 import { defineComponent } from 'vue'
-
-import { Urls } from '@/shared/Urls'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   setup: () => {
+    const store = useStore()
+
     return {
-      wsBaseUrl: Urls.getWebsocketUrl(),
+      wsBaseUrl: store.getters['settings/getWebsocketUrl'],
     }
   },
 })

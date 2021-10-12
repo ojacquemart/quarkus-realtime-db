@@ -1,5 +1,7 @@
 import { Module } from 'vuex'
 
+import { ApiSettings } from '@/apis/ApiSettings'
+
 import { StoreSettings } from '@/store/settings/StoreSettings'
 
 const settingsStore: Module<StoreSettings, unknown> = {
@@ -8,18 +10,33 @@ const settingsStore: Module<StoreSettings, unknown> = {
     return new StoreSettings()
   },
   mutations: {
-    setUrl(state: StoreSettings, url: string) {
-      state.setUrl(url)
+    setSettings(state: StoreSettings, payload: ApiSettings) {
+      state.setSettings(payload)
     },
   },
   actions: {
-    async setUrl(context, url: string) {
-      await context.commit('setUrl', url)
+    async setSettings(context, payload: ApiSettings) {
+      return context.commit('setSettings', payload)
     },
   },
   getters: {
+    getApiRequest(state: StoreSettings) {
+      return state.getApiRequest()
+    },
     getUrl(state: StoreSettings) {
-      return state.url
+      return state.settings.url
+    },
+    getWebsocketUrl(state: StoreSettings) {
+      return state.getWebsocketUrl()
+    },
+    getApikeyHeaderName(state: StoreSettings) {
+      return state.settings.apikeyHeaderName
+    },
+    getApikeyPrefix(state: StoreSettings) {
+      return state.settings.apikeyPrefix
+    },
+    getApikey(state: StoreSettings) {
+      return state.settings.apikey
     },
   },
 }

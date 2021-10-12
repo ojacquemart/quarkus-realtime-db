@@ -37,6 +37,9 @@ const en = {
     settings: {
       title: 'Settings',
       url: 'Backend url',
+      apikey_header_name: 'Apikey header (ie: Authorization)',
+      apikey_prefix_value: 'Apikey prefix value (ie: Bearer)',
+      apikey_value: 'Apikey value',
     },
   },
 }

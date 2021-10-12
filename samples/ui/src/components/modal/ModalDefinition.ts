@@ -2,21 +2,30 @@ import { Store } from 'vuex'
 
 import { FormControl, FormControlValidators } from '@/components/modal/FormControl'
 
+const DEFAULT_VALIDATOR = (controls: FormControl[]) => FormControlValidators.requiredNotEmpty(controls)
+
+export interface ModalOptions {
+  payloadObject?: boolean,
+  validator?: (controls: FormControl[]) => boolean,
+}
+
 export class ModalDefinition {
   id: string
   title: string
   dispatch: string
   validator: (controls: FormControl[]) => boolean
+  payloadObject?: boolean
   controls: FormControl[]
 
   constructor(
     id: string, title: string, dispatch: string, controls: FormControl[],
-    validator?: (controls: FormControl[]) => boolean,
+    options?: ModalOptions,
   ) {
     this.id = id
     this.title = title
     this.dispatch = dispatch
-    this.validator = validator ?? FormControlValidators.requiredNotEmpty
+    this.validator = options?.validator ?? DEFAULT_VALIDATOR
+    this.payloadObject = options?.payloadObject ?? false
     this.controls = controls
   }
 
@@ -25,8 +34,28 @@ export class ModalDefinition {
   }
 
   async save(store: Store<any>) {
-    await store.dispatch(this.dispatch || '', this.controls?.[0]?.value?.value || '')
+    const payload = this.getPayload()
+
+    await store.dispatch(this.dispatch, payload)
     store.commit('modals/close', this.id)
+  }
+
+  private getPayload() {
+    if (this.payloadObject) {
+      return this.getPayloadObject()
+    }
+
+    return this.controls?.[0]?.value?.value || ''
+  }
+
+  private getPayloadObject() {
+    return this.controls
+      .filter(it => (it.value || '') as string)
+      .reduce((acc, it) => {
+        acc[it.key] = it.value?.value || ''
+
+        return acc
+      }, {} as { [key: string]: string })
   }
 }
 
