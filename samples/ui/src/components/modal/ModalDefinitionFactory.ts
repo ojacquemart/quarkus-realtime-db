@@ -57,6 +57,9 @@ export class ModalDefinitionFactory {
           },
         ],
         {
+          afterSave: () => {
+            window.location.reload()
+          },
           payloadObject: true,
         },
       ),
