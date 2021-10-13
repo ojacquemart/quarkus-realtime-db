@@ -3,19 +3,24 @@ import { Store } from 'vuex'
 import { FormControl, FormControlValidators } from '@/components/modal/FormControl'
 
 const DEFAULT_VALIDATOR = (controls: FormControl[]) => FormControlValidators.requiredNotEmpty(controls)
+const NOOP = () => {
+  // do nothing
+}
 
 export interface ModalOptions {
-  payloadObject?: boolean,
-  validator?: (controls: FormControl[]) => boolean,
+  payloadObject?: boolean
+  validator?: (controls: FormControl[]) => boolean
+  afterSave?: () => void
 }
 
 export class ModalDefinition {
   id: string
   title: string
   dispatch: string
-  validator: (controls: FormControl[]) => boolean
-  payloadObject?: boolean
   controls: FormControl[]
+  validator: (controls: FormControl[]) => boolean
+  afterSave: () => void
+  payloadObject?: boolean
 
   constructor(
     id: string, title: string, dispatch: string, controls: FormControl[],
@@ -24,9 +29,10 @@ export class ModalDefinition {
     this.id = id
     this.title = title
     this.dispatch = dispatch
-    this.validator = options?.validator ?? DEFAULT_VALIDATOR
-    this.payloadObject = options?.payloadObject ?? false
     this.controls = controls
+    this.validator = options?.validator ?? DEFAULT_VALIDATOR
+    this.afterSave = options?.afterSave ?? NOOP
+    this.payloadObject = options?.payloadObject ?? false
   }
 
   validate(): boolean {
@@ -38,6 +44,8 @@ export class ModalDefinition {
 
     await store.dispatch(this.dispatch, payload)
     store.commit('modals/close', this.id)
+
+    this.afterSave()
   }
 
   private getPayload() {
@@ -57,5 +65,6 @@ export class ModalDefinition {
         return acc
       }, {} as { [key: string]: string })
   }
+
 }
 
